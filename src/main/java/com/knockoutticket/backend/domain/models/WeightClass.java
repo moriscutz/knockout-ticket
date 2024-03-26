@@ -1,4 +1,4 @@
-package com.knockoutticket.backend.domain.user;
+package com.knockoutticket.backend.domain.models;
 
 public enum WeightClass {
     HEAVYWEIGHT,
