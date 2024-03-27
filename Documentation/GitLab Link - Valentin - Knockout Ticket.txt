@@ -1,1 +1,2 @@
-https://git.fhict.nl/I516431/knockout-ticket
+Frontend: https://git.fhict.nl/I516431/knockoutticket-frontend
+Backend: https://git.fhict.nl/I516431/knockout-ticket
