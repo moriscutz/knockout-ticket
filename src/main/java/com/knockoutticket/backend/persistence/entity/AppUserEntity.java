@@ -1,23 +1,19 @@
 package com.knockoutticket.backend.persistence.entity;
 
 import com.knockoutticket.backend.domain.models.UserType;
+import lombok.*;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "app_users")
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class AppUserEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private Long id;
 
     @Column(name = "username", nullable = false, unique = true)

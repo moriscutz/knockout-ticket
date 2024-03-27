@@ -1,40 +1,34 @@
 package com.knockoutticket.backend.persistence.entity;
 
-import com.knockoutticket.backend.domain.models.WeightClass;
+import lombok.*;
+
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "boxers")
 @Data
-@EqualsAndHashCode(callSuper = true)
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class BoxerEntity extends AppUserEntity {
-    @Column(name = "full_name", nullable = false)
+    @Column(name = "full_name")
     private String fullName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "weight_class", nullable = false)
-    private WeightClass weightClass;
+    @Column(name = "weight_class")
+    private String weightClass;
 
-    @Column(name = "wins", nullable = false)
+    @Column(name = "wins")
     private Integer wins;
 
-    @Column(name = "losses", nullable = false)
+    @Column(name = "losses")
     private Integer losses;
 
-    @Column(name = "draws", nullable = false)
+    @Column(name = "draws")
     private Integer draws;
 
     @Column(name = "weight")
     private Float weight;
 
-    @Column(name = "age", nullable = false)
+    @Column(name = "age")
     private Integer age;
 }

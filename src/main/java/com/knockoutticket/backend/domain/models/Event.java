@@ -15,6 +15,7 @@ public class Event {
     private Long id;
     private Boxer boxer1;
     private Boxer boxer2;
+    private EventOrganizer organizer;
     private LocalDateTime date;
     private EventStatus status;
     private Boxer winner;

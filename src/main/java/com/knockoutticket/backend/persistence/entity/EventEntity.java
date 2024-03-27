@@ -28,6 +28,10 @@ public class EventEntity {
     @JoinColumn(name = "boxer2_id")
     private BoxerEntity boxer2;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organizer_id")
+    private EventOrganizerEntity organizer;
+
     @Column(name = "event_date")
     private LocalDateTime date;
 

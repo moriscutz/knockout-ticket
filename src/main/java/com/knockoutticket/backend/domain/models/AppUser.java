@@ -1,9 +1,10 @@
 package com.knockoutticket.backend.domain.models;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AppUser {

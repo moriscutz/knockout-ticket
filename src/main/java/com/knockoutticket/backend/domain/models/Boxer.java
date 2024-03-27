@@ -1,10 +1,13 @@
 package com.knockoutticket.backend.domain.models;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+
+import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 public class Boxer extends AppUser {
@@ -15,4 +18,5 @@ public class Boxer extends AppUser {
     private Integer draws;
     private Float weight;
     private Integer age;
+    private Event nextEvent;
 }
