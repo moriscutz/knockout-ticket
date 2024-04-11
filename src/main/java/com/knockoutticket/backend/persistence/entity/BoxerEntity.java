@@ -1,5 +1,6 @@
 package com.knockoutticket.backend.persistence.entity;
 
+import com.knockoutticket.backend.domain.models.WeightClass;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -14,8 +15,9 @@ public class BoxerEntity extends AppUserEntity {
     @Column(name = "full_name")
     private String fullName;
 
+    @Enumerated(EnumType.STRING) // Use EnumType.STRING for enum types
     @Column(name = "weight_class")
-    private String weightClass;
+    private WeightClass weightClass;
 
     @Column(name = "wins")
     private Integer wins;
