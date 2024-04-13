@@ -26,13 +26,21 @@ public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
     }
 
     private void updateUserFields(AppUserEntity user, UpdateAppUserRequest request) {
-        // Update user fields based on the request
+
         if (request.getEmail() != null) {
             user.setEmail(request.getEmail());
         }
         if (request.getPassword() != null) {
             user.setPassword(request.getPassword());
         }
-        // Similarly, update other fields as needed
+        if (request.getUsername() != null) {
+            if (!(appUserRepository.existsByUsername(request.getUsername()))) {
+                user.setUsername(request.getUsername());
+            }
+        }
+        if(request.getUserType()!= null)
+        {
+            user.setUserType(request.getUserType());
+        }
     }
 }

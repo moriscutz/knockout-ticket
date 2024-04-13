@@ -1,16 +1,14 @@
 package com.knockoutticket.backend.domain.models;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 
-import java.util.List;
-
-@EqualsAndHashCode(callSuper = true)
 @Data
-@SuperBuilder
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Boxer extends AppUser {
+public class Boxer {
+
+    private Long id;
     private String fullName;
     private WeightClass weightClass;
     private Integer wins;

@@ -20,15 +20,15 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boxer1_id")
+    @OneToOne (fetch = FetchType.LAZY)
+    @JoinColumn(name = "boxer_id_1")
     private BoxerEntity boxer1;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "boxer2_id")
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "boxer_id_2")
     private BoxerEntity boxer2;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private EventOrganizerEntity organizer;
 
@@ -39,7 +39,7 @@ public class EventEntity {
     @Column(name = "event_status")
     private EventStatus status;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "winner_id")
     private BoxerEntity winner;
 

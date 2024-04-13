@@ -9,8 +9,15 @@ import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class EventOrganizerEntity extends AppUserEntity {
+public class EventOrganizerEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "organization_name")
     private String organizationName;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_user_id", referencedColumnName = "id")
+    private AppUserEntity appUser;
 }

@@ -10,12 +10,16 @@ import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class BoxerEntity extends AppUserEntity {
+public class BoxerEntity{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "full_name")
     private String fullName;
 
-    @Enumerated(EnumType.STRING) // Use EnumType.STRING for enum types
+    @Enumerated(EnumType.STRING)
     @Column(name = "weight_class")
     private WeightClass weightClass;
 
@@ -33,4 +37,8 @@ public class BoxerEntity extends AppUserEntity {
 
     @Column(name = "age")
     private Integer age;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_user_id", referencedColumnName = "id")
+    private AppUserEntity appUser;
 }

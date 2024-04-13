@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Event {
     private Long id;
-    private Boxer boxer1;
-    private Boxer boxer2;
-    private EventOrganizer organizer;
+    private Long boxerId1;
+    private Long boxerId2;
+    private Long organizerId;
     private LocalDateTime date;
     private EventStatus status;
-    private Boxer winner;
+    private Long winnerId;
     private String place;
 }
