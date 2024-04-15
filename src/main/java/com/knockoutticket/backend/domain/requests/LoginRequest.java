@@ -1,6 +1,5 @@
 package com.knockoutticket.backend.domain.requests;
 
-import com.knockoutticket.backend.domain.models.UserType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateAppUserRequest {
+public class LoginRequest {
     @NotBlank
     private String username;
     @NotBlank
-    private String email;
-    @NotBlank
     private String password;
-
 }
