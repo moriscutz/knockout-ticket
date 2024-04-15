@@ -6,6 +6,7 @@ import com.knockoutticket.backend.domain.requests.CreateAppUserRequest;
 import com.knockoutticket.backend.domain.requests.UpdateAppUserRequest;
 import com.knockoutticket.backend.domain.responses.CreateAppUserResponse;
 import com.knockoutticket.backend.domain.responses.GetAppUserResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,7 +29,7 @@ public class AppUserController {
 
 
     @PostMapping
-    public ResponseEntity<CreateAppUserResponse> createAppUser(@RequestBody CreateAppUserRequest request) {
+    public ResponseEntity<CreateAppUserResponse> createAppUser(@Valid @RequestBody CreateAppUserRequest request) {
         CreateAppUserResponse response = createAppUserUseCase.createAppUser(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
