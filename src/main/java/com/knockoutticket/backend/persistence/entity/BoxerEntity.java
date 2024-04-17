@@ -10,12 +10,17 @@ import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class BoxerEntity extends AppUserEntity {
+public class BoxerEntity{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name ="id")
+    private Long id;
+
     @Column(name = "full_name")
     private String fullName;
 
-    @Enumerated(EnumType.STRING) // Use EnumType.STRING for enum types
+    @Enumerated(EnumType.STRING)
     @Column(name = "weight_class")
     private WeightClass weightClass;
 

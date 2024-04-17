@@ -1,9 +1,13 @@
 package com.knockoutticket.backend.persistence.entity;
 
 import com.knockoutticket.backend.domain.models.UserType;
+import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import lombok.*;
 
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "app_users")
@@ -25,7 +29,18 @@ public class AppUserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "user_type", nullable = false)
-    private UserType userType;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    @Builder.Default
+    private Set<UserTypeEntity> userRoles = new HashSet<>();
+
+    public void setUserType(UserType userType) {
+        this.userRoles.clear();
+
+        UserTypeEntity userTypeEntity = new UserTypeEntity();
+        userTypeEntity.setType(userType);
+        userTypeEntity.setUser(this);
+
+        this.userRoles.add(userTypeEntity);
+    }
 }
