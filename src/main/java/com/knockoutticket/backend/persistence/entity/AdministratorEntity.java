@@ -4,13 +4,15 @@
 //
 //import jakarta.persistence.*;
 //
+//import java.time.LocalDate;
+//
 //@Entity
-//@Table(name = "event_organizers")
+//@Table(name = "administrators")
 //@Data
 //@NoArgsConstructor
 //@AllArgsConstructor
 //@EqualsAndHashCode(callSuper = true)
-//public class EventOrganizerEntity extends AppUserEntity {
-//    @Column(name = "organization_name")
-//    private String organizationName;
+//public class AdministratorEntity extends AppUserEntity {
+//    @Column(name = "promotion_date")
+//    private LocalDate promotionDate;
 //}
