@@ -1,6 +1,7 @@
 package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.domain.models.AppUser;
+import com.knockoutticket.backend.domain.models.UserType;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import org.springframework.stereotype.Component;
 
@@ -8,22 +9,31 @@ import org.springframework.stereotype.Component;
 final class UserConverter {
 
     public AppUserEntity toEntity(AppUser user) {
-        return AppUserEntity.builder()
+        AppUserEntity appUserEntity = AppUserEntity.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .email(user.getEmail())
-                .userType(user.getUserType())
                 .build();
+
+        appUserEntity.setUserType(user.getUserType());
+
+        return appUserEntity;
     }
 
     public AppUser toModel(AppUserEntity entity) {
+        UserType userType = entity.getUserRoles()
+                .stream()
+                .findFirst()
+                .map(userRole -> userRole.getType())
+                .orElse(UserType.NORMAL_USER);
+
         return AppUser.builder()
                 .id(entity.getId())
                 .username(entity.getUsername())
                 .password(entity.getPassword())
                 .email(entity.getEmail())
-                .userType(entity.getUserType())
+                .userType(userType)
                 .build();
     }
 }
