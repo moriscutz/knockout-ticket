@@ -29,18 +29,16 @@ public class AppUserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    @Builder.Default
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<UserTypeEntity> userRoles = new HashSet<>();
 
-    public void setUserType(UserType userType) {
-        this.userRoles.clear();
-
-        UserTypeEntity userTypeEntity = new UserTypeEntity();
-        userTypeEntity.setType(userType);
+    public void addUserRole(UserType userType) {
+        UserTypeEntity userTypeEntity = new UserTypeEntity(userType);
         userTypeEntity.setUser(this);
+        userRoles.add(userTypeEntity);
+    }
 
-        this.userRoles.add(userTypeEntity);
+    public void removeUserRole(UserType userType) {
+        userRoles.removeIf(userTypeEntity -> userTypeEntity.getType() == userType);
     }
 }

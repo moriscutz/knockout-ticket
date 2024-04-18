@@ -28,7 +28,6 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
         else if (appUserRepository.existsByEmail(request.getEmail()))
         {
             throw new RuntimeException("User with email already exists");
-
         }
         else {
             AppUserEntity newAppUserEntity = saveNewAppUser(request);
@@ -46,7 +45,7 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
                 .email(request.getEmail())
                 .build();
 
-        newAppUser.setUserType(UserType.NORMAL_USER);
+        newAppUser.addUserRole(UserType.NORMAL_USER);
         return appUserRepository.save(newAppUser);
     }
 }
