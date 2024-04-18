@@ -6,6 +6,5 @@ public enum WeightClass {
     MIDDLEWEIGHT,
     WELTERWEIGHT,
     LIGHTWEIGHT,
-    FEATHERWEIGHT,
-    BANTAMWEIGHT
+    FEATHERWEIGHT
 }

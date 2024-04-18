@@ -1,9 +1,9 @@
 package com.knockoutticket.backend.domain.models;
 
 public enum EventStatus {
-    WILLHAPPEN,
-    HAPPENED,
-    FINISHED,
+    SCHEDULED,
+    ONGOING,
+    COMPLETE,
     DRAW,
     NO_CONTEST
 }
