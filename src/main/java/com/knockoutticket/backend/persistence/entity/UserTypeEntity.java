@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "user_type")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserTypeEntity {
@@ -22,9 +23,7 @@ public class UserTypeEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private AppUserEntity user;
 
-    public UserTypeEntity(UserType type) {
-        this.type = type;
-    }
 }

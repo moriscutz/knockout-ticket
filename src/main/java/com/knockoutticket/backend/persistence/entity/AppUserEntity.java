@@ -12,9 +12,10 @@ import java.util.Set;
 @Entity
 @Table(name = "app_users")
 @Data
+@EqualsAndHashCode
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class AppUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,16 +30,10 @@ public class AppUserEntity {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserTypeEntity> userRoles = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<UserTypeEntity> userRoles;
 
-    public void addUserRole(UserType userType) {
-        UserTypeEntity userTypeEntity = new UserTypeEntity(userType);
-        userTypeEntity.setUser(this);
-        userRoles.add(userTypeEntity);
-    }
 
-    public void removeUserRole(UserType userType) {
-        userRoles.removeIf(userTypeEntity -> userTypeEntity.getType() == userType);
-    }
+
+
 }
