@@ -30,7 +30,7 @@ public class EventEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
-    private EventOrganizerEntity organizer;
+    private AppUserEntity organizer;
 
     @Column(name = "event_date")
     private LocalDateTime date;

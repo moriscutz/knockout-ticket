@@ -45,7 +45,7 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
                 .email(request.getEmail())
                 .build();
 
-        newAppUser.setUserType(UserType.NORMAL_USER);
+        newAppUser.addUserRole(UserType.NORMAL_USER);
         return appUserRepository.save(newAppUser);
     }
 }
