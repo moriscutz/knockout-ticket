@@ -3,6 +3,8 @@ package com.knockoutticket.backend.domain.models;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Set;
+
 @Data
 @SuperBuilder
 @NoArgsConstructor
@@ -12,5 +14,5 @@ public class AppUser {
     private String username;
     private String email;
     private String password;
-    private UserType userType;
+    private Set<UserType> userType;
 }
