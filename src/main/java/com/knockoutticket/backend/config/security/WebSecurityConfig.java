@@ -40,7 +40,7 @@ public class WebSecurityConfig {
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()                 // CORS pre-flight requests should be public
-                                .requestMatchers(HttpMethod.POST, "/users", "/tokens").permitAll() // Creating a user and login are public
+                                .requestMatchers(HttpMethod.POST, "/users", "/tokens", "/boxers").permitAll() // Creating a user and login are public
                                 .requestMatchers(HttpMethod.GET,"/users").permitAll()
                                 .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()                        // Swagger is also public (In "real life" it would only be public in non-production environments)
                                 .anyRequest().authenticated()                                   // Everything else --> authentication required, which is Spring security's default behaviour
