@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Builder
 @Getter
-public class CreateBoxerResponse {
+public class CreateEventResponse {
     private Long id;
     private String message;
 }
