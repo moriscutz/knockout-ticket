@@ -10,11 +10,11 @@ import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BoxerEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name ="id")
     private Long id;
 
     @Column(name = "full_name")
@@ -38,4 +38,8 @@ public class BoxerEntity{
 
     @Column(name = "age")
     private Integer age;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "app_user_id", referencedColumnName = "id")
+//    private AppUserEntity appUser;
 }

@@ -1,5 +1,7 @@
-package com.knockoutticket.backend.domain.models;
+package com.knockoutticket.backend.domain.requests;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,13 +13,15 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Event {
-    private Long id;
+public class CreateEventRequest {
+    @NotNull
     private Long boxerId1;
+    @NotNull
     private Long boxerId2;
+    @NotNull
     private Long organizerId;
+    @NotNull
     private LocalDateTime date;
-    private EventStatus status;
-    private Long winnerId;
+    @NotBlank
     private String place;
 }

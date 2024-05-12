@@ -8,6 +8,8 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.management.RuntimeErrorException;
+
 @Service
 @AllArgsConstructor
 public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
@@ -26,13 +28,6 @@ public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
     }
 
     private void updateUserFields(AppUserEntity user, UpdateAppUserRequest request) {
-        // Update user fields based on the request
-        if (request.getEmail() != null) {
-            user.setEmail(request.getEmail());
-        }
-        if (request.getPassword() != null) {
-            user.setPassword(request.getPassword());
-        }
-        // Similarly, update other fields as needed
+        throw new RuntimeException("updateUserFields in UpdateAppUserUseCaseImpl.java IS NOT IMPLEMENTED");
     }
 }

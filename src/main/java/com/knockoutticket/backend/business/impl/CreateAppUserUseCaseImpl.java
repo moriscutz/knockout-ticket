@@ -1,6 +1,7 @@
 package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.business.CreateAppUserUseCase;
+import com.knockoutticket.backend.business.exception.*;
 import com.knockoutticket.backend.domain.models.UserType;
 import com.knockoutticket.backend.domain.requests.CreateAppUserRequest;
 import com.knockoutticket.backend.domain.responses.CreateAppUserResponse;
@@ -8,6 +9,7 @@ import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import jakarta.transaction.Transactional;
+import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,11 +27,11 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
     @Override
     public CreateAppUserResponse createAppUser(CreateAppUserRequest request) {
         if (appUserRepository.existsByUsername(request.getUsername())) {
-            throw new RuntimeException("User with username already exists");
+            throw new UsernameAlreadyExistsException();
         }
         else if (appUserRepository.existsByEmail(request.getEmail()))
         {
-            throw new RuntimeException("User with email already exists");
+            throw new EmailAlreadyExistsException();
         }
         else {
             AppUserEntity newAppUserEntity = saveNewAppUser(request);
@@ -52,13 +54,13 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
                 .build()));
 
         if(newAppUser.getEmail() == null || newAppUser.getEmail().trim().isEmpty()) {
-            throw new IllegalArgumentException("Email must not be blank");
+            throw new BlankEmailException();
         }
         if (newAppUser.getUsername() == null || newAppUser.getUsername().trim().isEmpty()){
-            throw new IllegalArgumentException("Username must not be blank");
+            throw new BlankUsernameException();
         }
         if (newAppUser.getPassword() == null || newAppUser.getPassword().trim().isEmpty()) {
-            throw new IllegalArgumentException("Password must not be blank");
+            throw new BlankPasswordException();
         }
         return appUserRepository.save(newAppUser);
     }
