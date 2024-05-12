@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringJUnitConfig
 @SpringBootTest
-public class GetAllAppUsersUseCaseImplTest {
+class GetAllAppUsersUseCaseImplTest {
 
     @Mock
     private AppUserRepository appUserRepository;

@@ -6,6 +6,7 @@ import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -46,7 +47,7 @@ final class UserConverter {
             }
             return userTypeEntities;
         }
-        return null;
+        return Collections.emptySet();
     }
 
     private Set<UserType> convertToUserTypes(Set<UserTypeEntity> userTypeEntities) {
@@ -57,6 +58,6 @@ final class UserConverter {
             }
             return userTypes;
         }
-        return null;
+        return Collections.emptySet();
     }
 }

@@ -8,7 +8,6 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.management.RuntimeErrorException;
 
 @Service
 @AllArgsConstructor

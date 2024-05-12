@@ -1,12 +1,10 @@
 package com.knockoutticket.backend.persistence.entity;
 
-import com.knockoutticket.backend.domain.models.UserType;
-import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
+
 import lombok.*;
 
 import jakarta.persistence.*;
 
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
