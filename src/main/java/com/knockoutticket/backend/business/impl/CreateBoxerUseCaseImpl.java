@@ -18,18 +18,6 @@ public class CreateBoxerUseCaseImpl implements CreateBoxerUseCase {
     @Transactional(rollbackOn = RuntimeException.class)
     @Override
     public CreateBoxerResponse createBoxer(CreateBoxerRequest request){
-        String fullName = request.getFullName();
-
-        // I've decided that two or more boxers can share the same name, as there are many occurences in ---
-        // real life where fighters share the same name, so it would not be wise to not allow creation of multiple boxers with similar names
-        //        BoxerEntity existingBoxer = boxerRepository.findByFullNameIgnoreCase(fullName);
-        //        if (existingBoxer != null) {
-        //            return CreateBoxerResponse.builder()
-        //                    .message("A boxer with a similar name already exists.")
-        //                    .id(existingBoxer.getId())
-        //                    .build();
-        //        }
-
         BoxerEntity newBoxer = saveNewBoxer(request);
         return CreateBoxerResponse.builder()
                 .message("Boxer created successfully.")
