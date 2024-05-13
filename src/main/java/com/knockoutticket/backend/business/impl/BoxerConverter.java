@@ -4,6 +4,11 @@ import com.knockoutticket.backend.domain.models.Boxer;
 import com.knockoutticket.backend.persistence.entity.BoxerEntity;
 
 public class BoxerConverter {
+
+    private BoxerConverter() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static Boxer toBoxerDTO(BoxerEntity boxerEntity) {
         return Boxer.builder()
                 .id(boxerEntity.getId())

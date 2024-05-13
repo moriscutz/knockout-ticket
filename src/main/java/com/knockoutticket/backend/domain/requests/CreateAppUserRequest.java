@@ -1,6 +1,5 @@
 package com.knockoutticket.backend.domain.requests;
 
-import com.knockoutticket.backend.domain.models.UserType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
