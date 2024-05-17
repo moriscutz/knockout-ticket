@@ -2,6 +2,7 @@ package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.business.CreateEventUseCase;
 import com.knockoutticket.backend.business.exception.BoxerNotFoundException;
+import com.knockoutticket.backend.business.exception.EventWithSameBoxerException;
 import com.knockoutticket.backend.business.exception.OrganizerNotFoundException;
 import com.knockoutticket.backend.domain.requests.CreateEventRequest;
 import com.knockoutticket.backend.domain.responses.CreateEventResponse;
@@ -36,6 +37,8 @@ public class CreateEventUseCaseImpl implements CreateEventUseCase {
         AppUserEntity organizer = appUserRepository.findById(request.getOrganizerId())
                 .orElseThrow(() -> new OrganizerNotFoundException(request.getOrganizerId()));
 
+        if(boxer1.equals(boxer2))
+            throw new EventWithSameBoxerException();
         EventEntity newEvent = EventEntity.builder()
                 .boxer1(boxer1)
                 .boxer2(boxer2)
