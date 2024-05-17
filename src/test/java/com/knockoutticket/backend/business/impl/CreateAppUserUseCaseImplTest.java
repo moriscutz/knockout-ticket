@@ -31,15 +31,21 @@ class CreateAppUserUseCaseImplTest {
     @BeforeEach
     void setup() {
         lenient().when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
+        lenient().when(appUserRepository.existsByUsername(anyString())).thenReturn(false);
+        lenient().when(appUserRepository.existsByEmail(anyString())).thenReturn(false);
+        lenient().when(appUserRepository.save(any(AppUserEntity.class))).thenAnswer(i -> {
+            AppUserEntity user = i.getArgument(0);
+            user.setId(1L);
+            return user;
+        });
     }
 
     @Test
     void createAppUser_SuccessfulCreation_ReturnsResponse() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("newuser", "password", "newuser@example.com");
+        CreateAppUserRequest request = new CreateAppUserRequest("newuser", "newuser@example.com", "password");
         when(appUserRepository.existsByUsername(request.getUsername())).thenReturn(false);
         when(appUserRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(appUserRepository.save(any(AppUserEntity.class))).thenAnswer(i -> i.getArguments()[0]);
 
         // Act
         CreateAppUserResponse response = createAppUserUseCase.createAppUser(request);
@@ -53,7 +59,7 @@ class CreateAppUserUseCaseImplTest {
     @Test
     void createAppUser_UsernameExists_ThrowsUsernameAlreadyExistsException() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("existingUser", "password", "user@example.com");
+        CreateAppUserRequest request = new CreateAppUserRequest("existingUser", "user@example.com", "password");
         when(appUserRepository.existsByUsername(request.getUsername())).thenReturn(true);
 
         // Act & Assert
@@ -63,7 +69,7 @@ class CreateAppUserUseCaseImplTest {
     @Test
     void createAppUser_EmailExists_ThrowsEmailAlreadyExistsException() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("user", "password", "existing@example.com");
+        CreateAppUserRequest request = new CreateAppUserRequest("user", "existing@example.com", "password");
         when(appUserRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
         // Act & Assert
@@ -73,35 +79,36 @@ class CreateAppUserUseCaseImplTest {
     @Test
     void createAppUser_BlankEmail_ThrowsBlankEmailException() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("user", "password", "  ");
+        CreateAppUserRequest request = new CreateAppUserRequest("user", "  ", "password");
         when(appUserRepository.existsByUsername(request.getUsername())).thenReturn(false);
         when(appUserRepository.existsByEmail(request.getEmail())).thenReturn(false);
 
         // Act & Assert
         assertThrows(BlankEmailException.class, () -> createAppUserUseCase.createAppUser(request));
+        verify(appUserRepository, never()).save(any(AppUserEntity.class));
     }
 
     @Test
     void createAppUser_BlankUsername_ThrowsBlankUsernameException() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("  ", "password", "user@example.com");
+        CreateAppUserRequest request = new CreateAppUserRequest("  ", "user@example.com", "password");
         when(appUserRepository.existsByUsername(request.getUsername())).thenReturn(false);
         when(appUserRepository.existsByEmail(request.getEmail())).thenReturn(false);
 
         // Act & Assert
         assertThrows(BlankUsernameException.class, () -> createAppUserUseCase.createAppUser(request));
+        verify(appUserRepository, never()).save(any(AppUserEntity.class));
     }
 
     @Test
     void createAppUser_BlankPassword_ThrowsBlankPasswordException() {
         // Arrange
-        CreateAppUserRequest request = new CreateAppUserRequest("user", " ", "user@example.com");
+        CreateAppUserRequest request = new CreateAppUserRequest("user", "user@example.com", "  ");
         when(appUserRepository.existsByUsername(request.getUsername())).thenReturn(false);
         when(appUserRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(appUserRepository.save(any())).thenReturn(new AppUserEntity());
 
         // Act & Assert
         assertThrows(BlankPasswordException.class, () -> createAppUserUseCase.createAppUser(request));
+        verify(appUserRepository, never()).save(any(AppUserEntity.class));
     }
-
 }
