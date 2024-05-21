@@ -10,8 +10,6 @@ import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.apache.coyote.Request;
-import org.springframework.data.repository.query.ReactiveExtensionAwareQueryMethodEvaluationContextProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Set;
