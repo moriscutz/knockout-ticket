@@ -54,13 +54,13 @@ class AuthenticationRequestFilterTest {
     }
 
     @Test
-    public void whenNoAuthorizationHeader_thenContinueFilterChain() throws Exception {
+    void whenNoAuthorizationHeader_thenContinueFilterChain() throws Exception {
         mockMvc.perform(get("/test-endpoint"))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void whenValidToken_thenAuthenticateAndContinueFilterChain() throws Exception {
+    void whenValidToken_thenAuthenticateAndContinueFilterChain() throws Exception {
         AccessToken validAccessToken = new AccessTokenImpl("username", 123L, Set.of("USER"));
         when(accessTokenDecoder.decode(anyString())).thenReturn(validAccessToken);
 
@@ -73,7 +73,7 @@ class AuthenticationRequestFilterTest {
     }
 
     @Test
-    public void whenInvalidToken_thenSendAuthenticationError() throws Exception {
+    void whenInvalidToken_thenSendAuthenticationError() throws Exception {
         when(accessTokenDecoder.decode(anyString())).thenThrow(InvalidAccessTokenException.class);
 
         mockMvc.perform(get("/test-endpoint")
