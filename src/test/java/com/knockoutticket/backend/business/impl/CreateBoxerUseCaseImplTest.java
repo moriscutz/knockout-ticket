@@ -1,6 +1,7 @@
 package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.business.exception.*;
+import com.knockoutticket.backend.domain.models.WeightClass;
 import com.knockoutticket.backend.domain.requests.CreateBoxerRequest;
 import com.knockoutticket.backend.domain.responses.CreateBoxerResponse;
 import com.knockoutticket.backend.persistence.BoxerRepository;
@@ -28,7 +29,7 @@ class CreateBoxerUseCaseImplTest {
     void setup() {
         lenient().when(boxerRepository.save(any(BoxerEntity.class))).thenAnswer(i -> {
             BoxerEntity boxer = i.getArgument(0);
-            boxer.setId(1L); // Simulate ID generation
+            boxer.setId(1L);
             return boxer;
         });
     }
@@ -37,7 +38,7 @@ class CreateBoxerUseCaseImplTest {
     void createBoxer_SuccessfulCreation_ReturnsResponse() {
         // Arrange
         CreateBoxerRequest request = new CreateBoxerRequest(
-                "John Doe", "Heavyweight", 10, 2, 1, 220.5f, 28
+                "John Doe", WeightClass.HEAVYWEIGHT, 10, 2, 1, 220.5f, 28
         );
 
         // Act
@@ -51,28 +52,79 @@ class CreateBoxerUseCaseImplTest {
     }
 
     @Test
-    void createBoxer_MissingFullName_ThrowsIllegalArgumentException() {
+    void createBoxer_NullFullName_ThrowsException() {
         // Arrange
         CreateBoxerRequest request = new CreateBoxerRequest(
-                "", "HEAVYWEIGHT", 10, 2, 1, 220.5f, 28
+                null, WeightClass.HEAVYWEIGHT, 10, 2, 1, 220.5f, 28
         );
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> createBoxerUseCase.createBoxer(request));
-        verify(boxerRepository, never()).save(any(BoxerEntity.class));
+        assertThrows(BlankBoxerFullNameException.class, () -> createBoxerUseCase.createBoxer(request));
     }
 
     @Test
-    void createBoxer_NullWeightClass_ThrowsIllegalArgumentException() {
+    void createBoxer_NullWeightClass_ThrowsException() {
         // Arrange
         CreateBoxerRequest request = new CreateBoxerRequest(
                 "John Doe", null, 10, 2, 1, 220.5f, 28
         );
 
         // Act & Assert
-        assertThrows(IllegalArgumentException.class, () -> createBoxerUseCase.createBoxer(request));
-        verify(boxerRepository, never()).save(any(BoxerEntity.class));
+        assertThrows(BlankWeightClassException.class, () -> createBoxerUseCase.createBoxer(request));
     }
 
-    // Add more tests to cover other validation scenarios as needed
+    @Test
+    void createBoxer_NullWins_ThrowsException() {
+        // Arrange
+        CreateBoxerRequest request = new CreateBoxerRequest(
+                "John Doe", WeightClass.HEAVYWEIGHT, null, 2, 1, 220.5f, 28
+        );
+
+        // Act & Assert
+        assertThrows(BlankWinsException.class, () -> createBoxerUseCase.createBoxer(request));
+    }
+
+    @Test
+    void createBoxer_NullLosses_ThrowsException() {
+        // Arrange
+        CreateBoxerRequest request = new CreateBoxerRequest(
+                "John Doe", WeightClass.HEAVYWEIGHT, 10, null, 1, 220.5f, 28
+        );
+
+        // Act & Assert
+        assertThrows(BlankLossesException.class, () -> createBoxerUseCase.createBoxer(request));
+    }
+
+    @Test
+    void createBoxer_NullDraws_ThrowsException() {
+        // Arrange
+        CreateBoxerRequest request = new CreateBoxerRequest(
+                "John Doe", WeightClass.HEAVYWEIGHT, 10, 2, null, 220.5f, 28
+        );
+
+        // Act & Assert
+        assertThrows(BlankDrawsException.class, () -> createBoxerUseCase.createBoxer(request));
+    }
+
+    @Test
+    void createBoxer_NullWeight_ThrowsException() {
+        // Arrange
+        CreateBoxerRequest request = new CreateBoxerRequest(
+                "John Doe", WeightClass.HEAVYWEIGHT, 10, 2, 1, null, 28
+        );
+
+        // Act & Assert
+        assertThrows(BlankWeightException.class, () -> createBoxerUseCase.createBoxer(request));
+    }
+
+    @Test
+    void createBoxer_NullAge_ThrowsException() {
+        // Arrange
+        CreateBoxerRequest request = new CreateBoxerRequest(
+                "John Doe", WeightClass.HEAVYWEIGHT, 10, 2, 1, 220.5f, null
+        );
+
+        // Act & Assert
+        assertThrows(BlankAgeException.class, () -> createBoxerUseCase.createBoxer(request));
+    }
 }
