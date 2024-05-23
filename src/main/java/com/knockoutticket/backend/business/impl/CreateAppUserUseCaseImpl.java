@@ -9,7 +9,6 @@ import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -42,6 +41,16 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
     }
 
     private AppUserEntity saveNewAppUser(CreateAppUserRequest request) {
+        if(request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new BlankEmailException();
+        }
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()){
+            throw new BlankUsernameException();
+        }
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
+            throw new BlankPasswordException();
+        }
+
         String encodedPassword =passwordEncoder.encode(request.getPassword());
         AppUserEntity newAppUser = AppUserEntity.builder()
                 .username(request.getUsername())
@@ -53,15 +62,7 @@ public class CreateAppUserUseCaseImpl implements CreateAppUserUseCase {
                 .user(newAppUser)
                 .build()));
 
-        if(newAppUser.getEmail() == null || newAppUser.getEmail().trim().isEmpty()) {
-            throw new BlankEmailException();
-        }
-        if (newAppUser.getUsername() == null || newAppUser.getUsername().trim().isEmpty()){
-            throw new BlankUsernameException();
-        }
-        if (newAppUser.getPassword() == null || newAppUser.getPassword().trim().isEmpty()) {
-            throw new BlankPasswordException();
-        }
+
         return appUserRepository.save(newAppUser);
     }
 }

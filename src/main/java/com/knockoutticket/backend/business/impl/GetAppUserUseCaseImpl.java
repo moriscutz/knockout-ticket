@@ -1,7 +1,8 @@
 package com.knockoutticket.backend.business.impl;
 
-import com.knockoutticket.backend.business.impl.UserConverter;
+
 import com.knockoutticket.backend.business.GetAppUserUseCase;
+import com.knockoutticket.backend.business.exception.UserNotFoundException;
 import com.knockoutticket.backend.domain.responses.GetAppUserResponse;
 import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
@@ -20,7 +21,7 @@ public class GetAppUserUseCaseImpl implements GetAppUserUseCase {
     @Override
     public GetAppUserResponse getAppUser(Long id) {
         AppUserEntity foundUser = appUserRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         return GetAppUserResponse.builder()
                 .user(userConverter.toModel(foundUser))
