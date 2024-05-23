@@ -41,8 +41,6 @@ final class UserConverter {
             for (UserType userType : userTypes) {
                 UserTypeEntity userTypeEntity = new UserTypeEntity();
                 userTypeEntity.setType(userType);
-                // might be necessary later on
-                // userTypeEntity.setUser(userEntity);
                 userTypeEntities.add(userTypeEntity);
             }
             return userTypeEntities;

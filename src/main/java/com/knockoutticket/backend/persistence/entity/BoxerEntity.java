@@ -11,6 +11,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode
 public class BoxerEntity{
 
     @Id
@@ -38,8 +39,4 @@ public class BoxerEntity{
 
     @Column(name = "age")
     private Integer age;
-
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "app_user_id", referencedColumnName = "id")
-//    private AppUserEntity appUser;
 }

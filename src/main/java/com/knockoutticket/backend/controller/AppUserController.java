@@ -1,7 +1,6 @@
 package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.*;
-import com.knockoutticket.backend.domain.models.AppUser;
 import com.knockoutticket.backend.domain.requests.CreateAppUserRequest;
 import com.knockoutticket.backend.domain.requests.UpdateAppUserRequest;
 import com.knockoutticket.backend.domain.responses.CreateAppUserResponse;
@@ -9,7 +8,6 @@ import com.knockoutticket.backend.domain.responses.GetAppUserResponse;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

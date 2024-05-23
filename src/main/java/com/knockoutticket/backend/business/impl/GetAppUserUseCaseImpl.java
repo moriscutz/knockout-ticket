@@ -1,6 +1,6 @@
 package com.knockoutticket.backend.business.impl;
 
-import com.knockoutticket.backend.business.impl.UserConverter;
+
 import com.knockoutticket.backend.business.GetAppUserUseCase;
 import com.knockoutticket.backend.domain.responses.GetAppUserResponse;
 import com.knockoutticket.backend.persistence.AppUserRepository;
