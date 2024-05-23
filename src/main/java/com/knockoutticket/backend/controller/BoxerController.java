@@ -2,6 +2,7 @@ package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.CreateBoxerUseCase;
 import com.knockoutticket.backend.business.GetAllBoxersUseCase;
+import com.knockoutticket.backend.business.GetBoxerByIdUseCase;
 import com.knockoutticket.backend.domain.requests.CreateBoxerRequest;
 import com.knockoutticket.backend.domain.responses.CreateBoxerResponse;
 import com.knockoutticket.backend.domain.responses.GetBoxerResponse;
@@ -21,6 +22,7 @@ import java.util.List;
 public class BoxerController {
     private final CreateBoxerUseCase createBoxerUseCase;
     private final GetAllBoxersUseCase getAllBoxersUseCase;
+    private final GetBoxerByIdUseCase getBoxerByIdUseCase;
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<CreateBoxerResponse> createBoxer(@Valid @RequestBody CreateBoxerRequest request){
@@ -33,5 +35,12 @@ public class BoxerController {
     public ResponseEntity<List<GetBoxerResponse>> getAllBoxers(){
         List<GetBoxerResponse> responses = getAllBoxersUseCase.getAllBoxers();
         return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
+    @RolesAllowed({"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
+    @GetMapping("/{id}")
+    public ResponseEntity<GetBoxerResponse> getBoxerById(@PathVariable Long id) {
+        GetBoxerResponse response = getBoxerByIdUseCase.getBoxerById(id);
+        return ResponseEntity.ok(response);
     }
 }
