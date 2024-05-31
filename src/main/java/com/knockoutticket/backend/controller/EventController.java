@@ -2,9 +2,13 @@ package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.CreateEventUseCase;
 import com.knockoutticket.backend.business.GetAllEventsUseCase;
+import com.knockoutticket.backend.business.GetEventBoxersUseCase;
 import com.knockoutticket.backend.domain.requests.CreateEventRequest;
+import com.knockoutticket.backend.domain.requests.GetEventBoxersRequest;
 import com.knockoutticket.backend.domain.responses.CreateEventResponse;
+import com.knockoutticket.backend.domain.responses.GetEventBoxersResponse;
 import com.knockoutticket.backend.domain.responses.GetEventResponse;
+import io.swagger.models.Response;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -20,6 +24,8 @@ import java.util.List;
 public class EventController {
     private final CreateEventUseCase createEventUseCase;
     private final GetAllEventsUseCase getAllEventsUseCase;
+    private final GetEventBoxersUseCase getEventBoxersUseCase;
+
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
     public ResponseEntity<CreateEventResponse> createEvent(@Valid @RequestBody CreateEventRequest request)
@@ -35,4 +41,16 @@ public class EventController {
 
         return new ResponseEntity<>(events, HttpStatus.OK);
     }
+
+    @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR", "NORMAL_USER"})
+    @PostMapping("/{eventId}/boxers")
+    public ResponseEntity<GetEventBoxersResponse> getEventBoxers(@PathVariable Long eventId){
+        GetEventBoxersRequest request = GetEventBoxersRequest.builder()
+                .eventId(eventId)
+                .build();
+
+        GetEventBoxersResponse response = getEventBoxersUseCase.getEventBoxers(request);
+        return ResponseEntity.ok(response);
+    }
+
 }
