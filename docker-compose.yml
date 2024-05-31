@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mysql_db:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: "240420042501"
+      MYSQL_DATABASE: knockoutticket_database
+    ports:
+      - "3390:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

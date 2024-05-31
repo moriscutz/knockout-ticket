@@ -4,11 +4,14 @@
 # isolated from any previous builds.
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  DOCKER_IMAGE: "ritovale/knockoutticketrepo"
 
 stages:
   - build
   - test
   - sonarqube-check
+  - dockerize
+  - deploy
 
 build:
   stage: build
@@ -24,3 +27,33 @@ sonarqube-check:
   stage: sonarqube-check
   script:
     - ./gradlew test sonar jacocoTestReport
+
+dockerize:
+  stage: dockerize
+  image: docker:19.03.12
+  services:
+    - docker:dind
+  before_script:
+    - echo "Verifying DOCKER_HUB_USERNAME exists..."
+    - if [ -n "$DOCKER_HUB_USERNAME" ]; then echo "Username is set"; else echo "Username is NOT set" && exit 1; fi
+    - echo "Verifying DOCKER_HUB_PASSWORD exists..."
+    - if [ -n "$DOCKER_HUB_PASSWORD" ]; then echo "Password is set"; else echo "Password is NOT set" && exit 1; fi
+  script:
+    - echo "Attempting to login to Docker Hub..."
+    - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
+    - docker build -t $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG .
+    - docker push $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
+  only:
+    - master
+
+deploy:
+  stage: deploy
+  image: docker:19.03.12
+  services:
+    - docker:dind
+  script:
+    - echo "Deploying application from Docker Hub"
+    - docker pull $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
+    - docker run -d -p 8090:8080 --name knockoutticket_backend_j --network host $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
+  only:
+    - master
