@@ -35,9 +35,9 @@ dockerize:
     - docker:dind
   before_script:
     - echo "Verifying DOCKER_HUB_USERNAME exists..."
-    - if [ -n "$DOCKER_HUB_USERNAME" ]; then echo "Username is set"; else echo "Username is NOT set" && exit 1; fi
+    - if [ -n "$DOCKER_HUB_USERNAME" ]; then echo "Username is set"; else echo { "Username is NOT set" && exit 1 }
     - echo "Verifying DOCKER_HUB_PASSWORD exists..."
-    - if [ -n "$DOCKER_HUB_PASSWORD" ]; then echo "Password is set"; else echo "Password is NOT set" && exit 1; fi
+    - if [ -n "$DOCKER_HUB_PASSWORD" ]; then echo "Password is set"; else echo { "Password is NOT set" && exit 1 }
   script:
     - echo "Attempting to login to Docker Hub..."
     - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
