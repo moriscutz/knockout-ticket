@@ -14,8 +14,8 @@ public class EventConverter {
     public static Event toEventDTO(EventEntity eventEntity) {
         return Event.builder()
                 .id(eventEntity.getId())
-                .boxerId1(eventEntity.getBoxer1().getId())
-                .boxerId2(eventEntity.getBoxer2().getId())
+                .boxerId1(eventEntity.getBoxer1() != null ? eventEntity.getBoxer1().getId() : null)
+                .boxerId2(eventEntity.getBoxer2() != null ? eventEntity.getBoxer2().getId() : null)
                 .organizerId(eventEntity.getOrganizer().getId())
                 .date(eventEntity.getDate())
                 .status(eventEntity.getStatus())

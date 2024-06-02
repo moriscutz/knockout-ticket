@@ -7,13 +7,12 @@ import com.knockoutticket.backend.persistence.entity.EventEntity;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
-public class GetAllEventsUseCaseImpl implements GetAllEventsUseCase {
+public class    GetAllEventsUseCaseImpl implements GetAllEventsUseCase {
     private final EventRepository eventRepository;
 
     @Override
@@ -21,6 +20,6 @@ public class GetAllEventsUseCaseImpl implements GetAllEventsUseCase {
         List<EventEntity> eventEntities = eventRepository.findAll();
         return eventEntities.stream()
                 .map(eventEntity -> new GetEventResponse(EventConverter.toEventDTO(eventEntity)))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

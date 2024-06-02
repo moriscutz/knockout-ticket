@@ -10,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -34,7 +33,7 @@ public class GetAllBoxersUseCaseImpl implements GetAllBoxersUseCase {
                         (minWins == null || boxer.getWins() >= minWins) &&
                         (maxLosses == null || boxer.getLosses() <= maxLosses))
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private GetBoxerResponse mapToResponse(BoxerEntity boxerEntity) {

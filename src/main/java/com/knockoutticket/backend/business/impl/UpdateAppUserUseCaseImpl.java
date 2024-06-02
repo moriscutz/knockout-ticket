@@ -13,8 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
-
 @Service
 @AllArgsConstructor
 public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
@@ -32,24 +30,19 @@ public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
     }
 
     private void updateUserFields(AppUserEntity user, UpdateAppUserRequest request) {
-        if(request.getEmail() == null || request.getEmail().trim().isEmpty()) {
-            throw new BlankEmailException();
-        }
-        if (request.getUsername() == null || request.getUsername().trim().isEmpty()){
-            throw new BlankUsernameException();
-        }
         if (request.getPassword() == null || request.getPassword().trim().isEmpty()) {
             throw new BlankPasswordException();
+        }
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            throw new BlankEmailException();
+        }
+        if (request.getUsername() == null || request.getUsername().trim().isEmpty()) {
+            throw new BlankUsernameException();
         }
 
         user.setEmail(request.getEmail());
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
-//        user.setUserRoles(Set.of(UserTypeEntity.builder()
-//                .type(request.getUserType())
-//                .user(user)
-//                .build()));
 
         user.getUserRoles().clear();
         user.getUserRoles().add(UserTypeEntity.builder()
@@ -57,5 +50,6 @@ public class UpdateAppUserUseCaseImpl implements UpdateAppUserUseCase {
                 .user(user)
                 .build());
     }
+
 
 }
