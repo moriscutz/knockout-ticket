@@ -1,13 +1,12 @@
 package com.knockoutticket.backend.controller;
 
-import com.knockoutticket.backend.business.CreateBoxerUseCase;
-import com.knockoutticket.backend.business.GetAggregatedBoxerStatsUseCase;
-import com.knockoutticket.backend.business.GetAllBoxersUseCase;
-import com.knockoutticket.backend.business.GetBoxerByIdUseCase;
+import com.knockoutticket.backend.business.*;
 import com.knockoutticket.backend.domain.requests.CreateBoxerRequest;
+import com.knockoutticket.backend.domain.requests.UpdateBoxerRequest;
 import com.knockoutticket.backend.domain.responses.CreateBoxerResponse;
 import com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse;
 import com.knockoutticket.backend.domain.responses.GetBoxerResponse;
+import com.knockoutticket.backend.domain.responses.UpdateBoxerResponse;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -22,10 +21,13 @@ import java.util.List;
 @AllArgsConstructor
 @CrossOrigin(origins = {"http://localhost:5173/"})
 public class BoxerController {
+
     private final CreateBoxerUseCase createBoxerUseCase;
     private final GetAllBoxersUseCase getAllBoxersUseCase;
     private final GetBoxerByIdUseCase getBoxerByIdUseCase;
     private final GetAggregatedBoxerStatsUseCase getAggregatedBoxerStatsUseCase;
+    private final UpdateBoxerUseCase updateBoxerUseCase;
+    private final DeleteBoxerUseCase deleteBoxerUseCase;
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
@@ -36,9 +38,13 @@ public class BoxerController {
 
     @RolesAllowed({"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
     @GetMapping
-    public ResponseEntity<List<GetBoxerResponse>> getAllBoxers(){
-        List<GetBoxerResponse> responses = getAllBoxersUseCase.getAllBoxers();
-        return new ResponseEntity<>(responses, HttpStatus.OK);
+    public ResponseEntity<List<GetBoxerResponse>> getAllBoxers(
+            @RequestParam(required = false) String fullName,
+            @RequestParam(required = false) Integer minWins,
+            @RequestParam(required = false) Integer maxLosses) {
+
+        List<GetBoxerResponse> boxers = getAllBoxersUseCase.getFilteredBoxers(fullName, minWins, maxLosses);
+        return new ResponseEntity<>(boxers, HttpStatus.OK);
     }
 
     @RolesAllowed({"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
@@ -53,5 +59,20 @@ public class BoxerController {
     public ResponseEntity<GetAggregatedBoxerStatsResponse> getAggregatedBoxerStats(){
         GetAggregatedBoxerStatsResponse response = getAggregatedBoxerStatsUseCase.getAggregatedBoxerStats();
         return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RolesAllowed({"ADMINISTRATOR", "EVENT_ORGANIZER"})
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateBoxerResponse> updateBoxer(@PathVariable Long id, @Valid @RequestBody UpdateBoxerRequest request){
+        request.setId(id); // Here I ensure that the id form the path is set in the request object.
+        UpdateBoxerResponse response = updateBoxerUseCase.updateBoxer(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @RolesAllowed({"ADMINISTRATOR", "EVENT_ORGANIZER"})
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBoxer(@PathVariable Long id) {
+        deleteBoxerUseCase.deleteBoxer(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
