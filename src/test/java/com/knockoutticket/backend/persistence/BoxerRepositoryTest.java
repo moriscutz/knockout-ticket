@@ -1,7 +1,6 @@
 package com.knockoutticket.backend.persistence;
 
 import com.knockoutticket.backend.domain.models.WeightClass;
-import com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse;
 import com.knockoutticket.backend.persistence.entity.BoxerEntity;
 import com.knockoutticket.backend.persistence.entity.EventEntity;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
@@ -31,7 +30,7 @@ public class BoxerRepositoryTest {
     public void whenFindByFullNameIgnoreCase_thenReturnBoxerEntity() {
         // given
         BoxerEntity boxer = BoxerEntity.builder()
-                .fullName("Mike Tyson")
+                .fullName("Albert Einstein")
                 .weightClass(WeightClass.HEAVYWEIGHT)
                 .wins(50)
                 .losses(6)
@@ -43,7 +42,7 @@ public class BoxerRepositoryTest {
         entityManager.flush();
 
         // when
-        BoxerEntity found = boxerRepository.findByFullNameIgnoreCase("mike tyson");
+        BoxerEntity found = boxerRepository.findByFullNameIgnoreCase("aLbert einStein");
 
         // then
         assertThat(found).isNotNull();
