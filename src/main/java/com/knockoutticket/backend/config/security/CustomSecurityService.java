@@ -1,17 +1,19 @@
 package com.knockoutticket.backend.config.security;
 
 import com.knockoutticket.backend.config.security.token.AccessToken;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class CustomSecurityService {
 
+    private final AccessToken accessToken;
+
     @Autowired
-    private AccessToken accessToken;
+    public CustomSecurityService(AccessToken accessToken) {
+        this.accessToken = accessToken;
+    }
 
     public boolean isAccountIdMatching(Long accountId, Authentication authentication){
         if(authentication == null || this.accessToken == null){

@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class BoxerRepositoryTest {
+class BoxerRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -27,8 +27,8 @@ public class BoxerRepositoryTest {
     private BoxerRepository boxerRepository;
 
     @Test
-    public void whenFindByFullNameIgnoreCase_thenReturnBoxerEntity() {
-        // given
+    void whenFindByFullNameIgnoreCase_thenReturnBoxerEntity() {
+
         BoxerEntity boxer = BoxerEntity.builder()
                 .fullName("Albert Einstein")
                 .weightClass(WeightClass.HEAVYWEIGHT)
@@ -41,17 +41,17 @@ public class BoxerRepositoryTest {
         entityManager.persist(boxer);
         entityManager.flush();
 
-        // when
+
         BoxerEntity found = boxerRepository.findByFullNameIgnoreCase("aLbert einStein");
 
-        // then
+
         assertThat(found).isNotNull();
         assertThat(found.getFullName()).isEqualTo(boxer.getFullName());
     }
 
     @Test
-    public void whenFindBoxerById_thenReturnBoxerEntity() {
-        // given
+    void whenFindBoxerById_thenReturnBoxerEntity() {
+
         BoxerEntity boxer = BoxerEntity.builder()
                 .fullName("Muhammad Ali")
                 .weightClass(WeightClass.HEAVYWEIGHT)
@@ -64,17 +64,17 @@ public class BoxerRepositoryTest {
         entityManager.persist(boxer);
         entityManager.flush();
 
-        // when
+
         BoxerEntity found = boxerRepository.findBoxerById(boxer.getId());
 
-        // then
+
         assertThat(found).isNotNull();
         assertThat(found.getFullName()).isEqualTo(boxer.getFullName());
     }
 
     @Test
-    public void whenFindBoxersByEventId_thenReturnBoxerEntities() {
-        // given
+    void whenFindBoxersByEventId_thenReturnBoxerEntities() {
+
         BoxerEntity boxer1 = BoxerEntity.builder()
                 .fullName("Lennox Lewis")
                 .weightClass(WeightClass.HEAVYWEIGHT)
@@ -115,12 +115,12 @@ public class BoxerRepositoryTest {
         entityManager.persist(event);
         entityManager.flush();
 
-        // when
+
         List<BoxerEntity> foundBoxers = boxerRepository.findBoxersByEventId(event.getId());
 
-        // then
+
         assertThat(foundBoxers).isNotNull();
-        assertThat(foundBoxers.size()).isEqualTo(2);
+        assertThat(foundBoxers).hasSize(2);
         assertThat(foundBoxers).contains(boxer1, boxer2);
     }
 }

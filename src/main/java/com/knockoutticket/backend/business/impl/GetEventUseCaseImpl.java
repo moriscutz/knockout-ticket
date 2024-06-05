@@ -1,7 +1,6 @@
 package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.business.GetEventUseCase;
-import com.knockoutticket.backend.business.exception.EventNotFoundException;
 import com.knockoutticket.backend.domain.models.Event;
 import com.knockoutticket.backend.domain.responses.GetEventResponse;
 import com.knockoutticket.backend.persistence.EventRepository;

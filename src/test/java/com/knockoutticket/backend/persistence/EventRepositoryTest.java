@@ -27,8 +27,8 @@ public class EventRepositoryTest {
     private EventRepository eventRepository;
 
     @Test
-    public void whenFindByBoxer1IdOrBoxer2Id_thenReturnEventEntities() {
-        // given
+    void whenFindByBoxer1IdOrBoxer2Id_thenReturnEventEntities() {
+
         BoxerEntity boxer1 = BoxerEntity.builder()
                 .fullName("Lennox Lewis")
                 .weightClass(WeightClass.HEAVYWEIGHT)
@@ -81,9 +81,9 @@ public class EventRepositoryTest {
 
         EventEntity event2 = EventEntity.builder()
                 .boxer1(boxer3)
-                .boxer2(null) // ensuring unique attendance
+                .boxer2(null)
                 .organizer(organizer)
-                .date(LocalDateTime.now().plusDays(1)) // Ensure different date to avoid duplication
+                .date(LocalDateTime.now().plusDays(1))
                 .status(EventStatus.SCHEDULED)
                 .place("MGM Grand")
                 .build();
@@ -91,22 +91,22 @@ public class EventRepositoryTest {
 
         entityManager.flush();
 
-        // when
+
         List<EventEntity> foundEventsForBoxer1 = eventRepository.findByBoxer1IdOrBoxer2Id(boxer1.getId(), boxer1.getId());
         List<EventEntity> foundEventsForBoxer2 = eventRepository.findByBoxer1IdOrBoxer2Id(boxer2.getId(), boxer2.getId());
         List<EventEntity> foundEventsForBoxer3 = eventRepository.findByBoxer1IdOrBoxer2Id(boxer3.getId(), boxer3.getId());
 
-        // then
+
         assertThat(foundEventsForBoxer1).isNotNull();
-        assertThat(foundEventsForBoxer1.size()).isEqualTo(1);
+        assertThat(foundEventsForBoxer1).hasSize(1);
         assertThat(foundEventsForBoxer1).contains(event1);
 
         assertThat(foundEventsForBoxer2).isNotNull();
-        assertThat(foundEventsForBoxer2.size()).isEqualTo(1);
+        assertThat(foundEventsForBoxer2).hasSize(1);
         assertThat(foundEventsForBoxer2).contains(event1);
 
         assertThat(foundEventsForBoxer3).isNotNull();
-        assertThat(foundEventsForBoxer3.size()).isEqualTo(1);
+        assertThat(foundEventsForBoxer3).hasSize(1);
         assertThat(foundEventsForBoxer3).contains(event2);
     }
 }
