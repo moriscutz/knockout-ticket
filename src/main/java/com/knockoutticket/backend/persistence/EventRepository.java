@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface EventRepository extends JpaRepository<EventEntity,Long> {
     List<EventEntity> findByBoxer1IdOrBoxer2Id(Long boxer1Id, Long boxer2Id);
+    EventEntity findById(long id);
 }
