@@ -14,7 +14,8 @@ public interface BoxerRepository extends JpaRepository<BoxerEntity, Long> {
     @Query("SELECT b FROM BoxerEntity b WHERE b.id = :id")
     BoxerEntity findBoxerById(Long id);
 
-    @Query("SELECT b FROM BoxerEntity b WHERE b.id IN (SELECT e.boxer1.id FROM EventEntity e WHERE e.id = :eventId) OR b.id IN (SELECT e.boxer2.id FROM EventEntity e WHERE e.id = :eventId)")
+    @Query("SELECT b FROM BoxerEntity b WHERE b.id IN (SELECT e.boxer1.id FROM EventEntity e WHERE e.id = :eventId) OR " +
+            "b.id IN (SELECT e.boxer2.id FROM EventEntity e WHERE e.id = :eventId)")
     List<BoxerEntity> findBoxersByEventId(@Param("eventId") Long eventId);
 
     @Query("SELECT new com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse(AVG(b.wins), AVG(b.losses), AVG(b.draws)) FROM BoxerEntity b")

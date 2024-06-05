@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class AppUserRepositoryTest {
+class AppUserRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -25,8 +25,8 @@ public class AppUserRepositoryTest {
     private AppUserRepository appUserRepository;
 
     @Test
-    public void whenFindByUsername_thenReturnAppUserEntity() {
-        // given
+    void whenFindByUsername_thenReturnAppUserEntity() {
+
         AppUserEntity user = AppUserEntity.builder()
                 .username("testUser")
                 .email("test@example.com")
@@ -36,17 +36,17 @@ public class AppUserRepositoryTest {
         entityManager.persist(user);
         entityManager.flush();
 
-        // when
+
         AppUserEntity found = appUserRepository.findByUsername(user.getUsername());
 
-        // then
+
         assertThat(found).isNotNull();
         assertThat(found.getUsername()).isEqualTo(user.getUsername());
     }
 
     @Test
     void save_shouldSaveUserWithAllFields() {
-        // given
+
         AppUserEntity user = AppUserEntity.builder()
                 .username("garry_kasparov")
                 .password("securePassword123")
@@ -54,17 +54,17 @@ public class AppUserRepositoryTest {
                 .userRoles(Collections.emptySet())
                 .build();
 
-        // Create and set UserTypeEntity
+
         UserTypeEntity userType = UserTypeEntity.builder()
                 .type(UserType.NORMAL_USER)
                 .user(user)
                 .build();
         user.setUserRoles(Collections.singleton(userType));
 
-        // when
+
         AppUserEntity savedUser = appUserRepository.save(user);
 
-        // then
+
         AppUserEntity foundUser = entityManager.find(AppUserEntity.class, savedUser.getId());
         assertThat(foundUser).isNotNull();
         assertThat(foundUser.getUsername()).isEqualTo(user.getUsername());
