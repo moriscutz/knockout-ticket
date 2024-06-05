@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-public class EventRepositoryTest {
+class EventRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -96,17 +96,19 @@ public class EventRepositoryTest {
         List<EventEntity> foundEventsForBoxer2 = eventRepository.findByBoxer1IdOrBoxer2Id(boxer2.getId(), boxer2.getId());
         List<EventEntity> foundEventsForBoxer3 = eventRepository.findByBoxer1IdOrBoxer2Id(boxer3.getId(), boxer3.getId());
 
+        assertThat(foundEventsForBoxer1)
+                .isNotNull()
+                .hasSize(1)
+                .contains(event1);
 
-        assertThat(foundEventsForBoxer1).isNotNull();
-        assertThat(foundEventsForBoxer1).hasSize(1);
-        assertThat(foundEventsForBoxer1).contains(event1);
+        assertThat(foundEventsForBoxer2)
+                .isNotNull()
+                .hasSize(1)
+                .contains(event1);
 
-        assertThat(foundEventsForBoxer2).isNotNull();
-        assertThat(foundEventsForBoxer2).hasSize(1);
-        assertThat(foundEventsForBoxer2).contains(event1);
-
-        assertThat(foundEventsForBoxer3).isNotNull();
-        assertThat(foundEventsForBoxer3).hasSize(1);
-        assertThat(foundEventsForBoxer3).contains(event2);
+        assertThat(foundEventsForBoxer3)
+                .isNotNull()
+                .hasSize(1)
+                .contains(event2);
     }
 }

@@ -118,9 +118,9 @@ class BoxerRepositoryTest {
 
         List<BoxerEntity> foundBoxers = boxerRepository.findBoxersByEventId(event.getId());
 
-
-        assertThat(foundBoxers).isNotNull();
-        assertThat(foundBoxers).hasSize(2);
-        assertThat(foundBoxers).contains(boxer1, boxer2);
+        assertThat(foundBoxers)
+                .isNotNull()
+                .hasSize(2)
+                .contains(boxer1, boxer2);
     }
 }
