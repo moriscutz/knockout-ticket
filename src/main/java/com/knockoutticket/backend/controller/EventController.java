@@ -3,6 +3,7 @@ package com.knockoutticket.backend.controller;
 import com.knockoutticket.backend.business.CreateEventUseCase;
 import com.knockoutticket.backend.business.GetAllEventsUseCase;
 import com.knockoutticket.backend.business.GetEventBoxersUseCase;
+import com.knockoutticket.backend.business.GetEventUseCase;
 import com.knockoutticket.backend.domain.requests.CreateEventRequest;
 import com.knockoutticket.backend.domain.requests.GetEventBoxersRequest;
 import com.knockoutticket.backend.domain.responses.CreateEventResponse;
@@ -25,6 +26,7 @@ public class EventController {
     private final CreateEventUseCase createEventUseCase;
     private final GetAllEventsUseCase getAllEventsUseCase;
     private final GetEventBoxersUseCase getEventBoxersUseCase;
+    private final GetEventUseCase getEventUseCase;
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
@@ -53,4 +55,10 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+    @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR", "NORMAL_USER"})
+    @GetMapping("/{id}")
+    public ResponseEntity<GetEventResponse> getEvent(@PathVariable Long id) {
+        GetEventResponse eventResponse = getEventUseCase.getEvent(id);
+        return ResponseEntity.ok(eventResponse);
+    }
 }

@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,6 +43,7 @@ public class AppUserController {
 
     @RolesAllowed({"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
     @PutMapping("/{id}")
+    @PreAuthorize("@customSecurityService.isAccountIdMatching(#id, authentication)")
     public ResponseEntity<Void> updateAppUser(@PathVariable Long id, @RequestBody UpdateAppUserRequest request) {
         updateAppUserUseCase.updateAppUser(id, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
