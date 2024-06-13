@@ -7,6 +7,7 @@ import com.knockoutticket.backend.domain.responses.UpdateUserRolesResponse;
 import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,7 @@ public class UpdateUserRolesAsAdminUseCaseImpl implements UpdateUserRolesAsAdmin
     private final UserConverter userConverter;
 
     @Override
+    @Transactional
     public UpdateUserRolesResponse updateUserRoles(Long userId, UpdateUserRolesRequest request) {
         Optional<AppUserEntity> optionalUserEntity = appUserRepository.findById(userId);
         if (optionalUserEntity.isPresent()) {

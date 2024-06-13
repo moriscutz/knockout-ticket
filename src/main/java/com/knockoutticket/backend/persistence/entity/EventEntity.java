@@ -28,7 +28,7 @@ public class EventEntity {
     @JoinColumn(name = "boxer_id_2")
     private BoxerEntity boxer2;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
     private AppUserEntity organizer;
 
