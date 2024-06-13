@@ -2,6 +2,7 @@ package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.domain.models.AppUser;
 import com.knockoutticket.backend.domain.models.UserType;
+import com.knockoutticket.backend.domain.responses.UpdateUserRolesResponse;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
 import org.springframework.stereotype.Component;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 final class UserConverter {
@@ -19,7 +21,7 @@ final class UserConverter {
         entity.setUsername(user.getUsername());
         entity.setPassword(user.getPassword());
         entity.setEmail(user.getEmail());
-        Set<UserTypeEntity> userTypeEntities = convertToUserTypeEntities(user.getUserType());
+        Set<UserTypeEntity> userTypeEntities = convertToUserTypeEntities(user.getUserType(), entity);
         entity.setUserRoles(userTypeEntities);
         return entity;
     }
@@ -35,15 +37,16 @@ final class UserConverter {
         return user;
     }
 
-    private Set<UserTypeEntity> convertToUserTypeEntities(Set<UserType> userTypes) {
+    public Set<UserTypeEntity> convertToUserTypeEntities(Set<UserType> userTypes, AppUserEntity userEntity) {
         if (userTypes != null && !userTypes.isEmpty()) {
-            Set<UserTypeEntity> userTypeEntities = new HashSet<>();
-            for (UserType userType : userTypes) {
-                UserTypeEntity userTypeEntity = new UserTypeEntity();
-                userTypeEntity.setType(userType);
-                userTypeEntities.add(userTypeEntity);
-            }
-            return userTypeEntities;
+            return userTypes.stream()
+                    .map(type -> {
+                        UserTypeEntity userTypeEntity = new UserTypeEntity();
+                        userTypeEntity.setType(type);
+                        userTypeEntity.setUser(userEntity);
+                        return userTypeEntity;
+                    })
+                    .collect(Collectors.toSet());
         }
         return Collections.emptySet();
     }
@@ -57,5 +60,16 @@ final class UserConverter {
             return userTypes;
         }
         return Collections.emptySet();
+    }
+
+    public UpdateUserRolesResponse toUpdateUserRolesResponse(AppUserEntity entity) {
+        UpdateUserRolesResponse response = new UpdateUserRolesResponse();
+        response.setId(entity.getId());
+        response.setUsername(entity.getUsername());
+        response.setEmail(entity.getEmail());
+        response.setUserRoles(entity.getUserRoles().stream()
+                .map(userTypeEntity -> userTypeEntity.getType().name())
+                .collect(Collectors.toSet()));
+        return response;
     }
 }

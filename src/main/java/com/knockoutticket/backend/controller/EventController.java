@@ -1,14 +1,13 @@
 package com.knockoutticket.backend.controller;
 
-import com.knockoutticket.backend.business.CreateEventUseCase;
-import com.knockoutticket.backend.business.GetAllEventsUseCase;
-import com.knockoutticket.backend.business.GetEventBoxersUseCase;
-import com.knockoutticket.backend.business.GetEventUseCase;
+import com.knockoutticket.backend.business.*;
 import com.knockoutticket.backend.domain.requests.CreateEventRequest;
 import com.knockoutticket.backend.domain.requests.GetEventBoxersRequest;
+import com.knockoutticket.backend.domain.requests.UpdateEventRequest;
 import com.knockoutticket.backend.domain.responses.CreateEventResponse;
 import com.knockoutticket.backend.domain.responses.GetEventBoxersResponse;
 import com.knockoutticket.backend.domain.responses.GetEventResponse;
+import com.knockoutticket.backend.domain.responses.UpdateEventResponse;
 import io.swagger.models.Response;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
@@ -27,6 +26,8 @@ public class EventController {
     private final GetAllEventsUseCase getAllEventsUseCase;
     private final GetEventBoxersUseCase getEventBoxersUseCase;
     private final GetEventUseCase getEventUseCase;
+    private final UpdateEventUseCase updateEventUseCase;
+    private final DeleteEventUseCase deleteEventUseCase;
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
@@ -60,5 +61,19 @@ public class EventController {
     public ResponseEntity<GetEventResponse> getEvent(@PathVariable Long id) {
         GetEventResponse eventResponse = getEventUseCase.getEvent(id);
         return ResponseEntity.ok(eventResponse);
+    }
+
+    @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateEventResponse> updateEvent(@PathVariable Long id, @RequestBody UpdateEventRequest request) {
+        UpdateEventResponse response = updateEventUseCase.updateEvent(id, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
+        deleteEventUseCase.deleteEvent(id);
+        return ResponseEntity.noContent().build();
     }
 }
