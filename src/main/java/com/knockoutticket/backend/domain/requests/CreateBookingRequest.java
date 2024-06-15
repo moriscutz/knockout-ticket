@@ -11,6 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBookingRequest {
+
+    @NotNull
+    private Long customer_id;
+
     @NotBlank
     private String name;
 

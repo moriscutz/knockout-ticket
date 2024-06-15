@@ -1,5 +1,6 @@
 package com.knockoutticket.backend.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.knockoutticket.backend.domain.models.EventStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,6 +31,7 @@ public class EventEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organizer_id")
+    @JsonBackReference
     private AppUserEntity organizer;
 
     @Column(name = "event_date")

@@ -7,5 +7,5 @@ import java.util.Set;
 
 @Data
 public class UpdateUserRolesRequest {
-    private Set<UserType> userTypes;
+    private Set<UserType> userType;
 }

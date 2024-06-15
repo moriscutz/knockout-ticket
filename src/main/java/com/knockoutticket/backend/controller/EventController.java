@@ -4,11 +4,7 @@ import com.knockoutticket.backend.business.*;
 import com.knockoutticket.backend.domain.requests.CreateEventRequest;
 import com.knockoutticket.backend.domain.requests.GetEventBoxersRequest;
 import com.knockoutticket.backend.domain.requests.UpdateEventRequest;
-import com.knockoutticket.backend.domain.responses.CreateEventResponse;
-import com.knockoutticket.backend.domain.responses.GetEventBoxersResponse;
-import com.knockoutticket.backend.domain.responses.GetEventResponse;
-import com.knockoutticket.backend.domain.responses.UpdateEventResponse;
-import io.swagger.models.Response;
+import com.knockoutticket.backend.domain.responses.*;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,6 +24,7 @@ public class EventController {
     private final GetEventUseCase getEventUseCase;
     private final UpdateEventUseCase updateEventUseCase;
     private final DeleteEventUseCase deleteEventUseCase;
+    private final GetEventsCountByOrganizerUseCase getEventsCountByOrganizerUseCase;
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
@@ -75,5 +72,11 @@ public class EventController {
     public ResponseEntity<Void> deleteEvent(@PathVariable Long id) {
         deleteEventUseCase.deleteEvent(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @RolesAllowed({"EVENT_ORGANIZER"})
+    @GetMapping("/countByOrganizer")
+    public ResponseEntity<List<GetEventsCountByOrganizerResponse>> countEventsByOrganizer(){
+        return new ResponseEntity<>(getEventsCountByOrganizerUseCase.countEventsByOrganizer(),HttpStatus.OK);
     }
 }

@@ -1,10 +1,12 @@
 package com.knockoutticket.backend.persistence.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,9 +31,22 @@ public class AppUserEntity {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
-    private Set<UserTypeEntity> userRoles;
+    @JsonManagedReference
+    private Set<UserTypeEntity> userRoles = new HashSet<>();
 
 
+    // Add a user role
+    public void addUserRole(UserTypeEntity userRole) {
+        userRoles.clear();
+        userRoles.add(userRole);
+        userRole.setUser(this);
+    }
+
+    // Remove a user role
+    public void removeUserRole(UserTypeEntity userRole) {
+        userRoles.remove(userRole);
+        userRole.setUser(null);
+    }
 
 
 }
