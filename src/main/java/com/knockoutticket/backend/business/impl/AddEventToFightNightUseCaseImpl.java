@@ -37,8 +37,10 @@ public class AddEventToFightNightUseCaseImpl implements AddEventToFightNightUseC
 
         BoxerEntity boxer1 = boxerRepository.findById(request.getBoxerId1())
                 .orElseThrow(() -> new BoxerNotFoundException(request.getBoxerId1()));
+
         BoxerEntity boxer2 = boxerRepository.findById(request.getBoxerId2())
                 .orElseThrow(() -> new BoxerNotFoundException(request.getBoxerId2()));
+
         AppUserEntity organizer = appUserRepository.findById(request.getOrganizerId())
                 .orElseThrow(() -> new OrganizerNotFoundException(request.getOrganizerId()));
 
