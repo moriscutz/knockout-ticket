@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -29,7 +28,7 @@ public class GetEventFightNightUseCaseImpl implements GetEventFightNightUseCase 
     private GetEventFightNightResponse convertToResponse(EventFightNightEntity entity) {
         List<Event> events = entity.getEvents().stream()
                 .map(EventConverter::toEventDTO)
-                .collect(Collectors.toList());
+                .toList();
 
         return new GetEventFightNightResponse(
                 entity.getId(),

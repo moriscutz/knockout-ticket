@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class CreateBookingRequest {
 
     @NotNull
-    private Long customer_id;
+    private Long customerId;
 
     @NotBlank
     private String name;

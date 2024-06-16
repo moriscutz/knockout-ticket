@@ -2,7 +2,6 @@ package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.business.UpdateEventFightNightUseCase;
 import com.knockoutticket.backend.business.exception.EventFightNightNotFoundException;
-import com.knockoutticket.backend.domain.models.EventFightNight;
 import com.knockoutticket.backend.domain.requests.UpdateEventFightNightRequest;
 import com.knockoutticket.backend.domain.responses.UpdateEventFightNightResponse;
 import com.knockoutticket.backend.persistence.EventFightNightRepository;

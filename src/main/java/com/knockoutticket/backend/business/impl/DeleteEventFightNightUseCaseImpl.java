@@ -4,7 +4,6 @@ import com.knockoutticket.backend.business.DeleteEventFightNightUseCase;
 import com.knockoutticket.backend.business.exception.EventFightNightNotFoundException;
 import com.knockoutticket.backend.persistence.BookingRepository;
 import com.knockoutticket.backend.persistence.EventFightNightRepository;
-import com.knockoutticket.backend.persistence.EventRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

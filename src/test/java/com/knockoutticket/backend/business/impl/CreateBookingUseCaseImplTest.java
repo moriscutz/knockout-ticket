@@ -48,7 +48,7 @@ class CreateBookingUseCaseImplTest {
         Long customerId = 2L;
         CreateBookingRequest request = CreateBookingRequest.builder()
                 .eventFightNightId(eventFightNightId)
-                .customer_id(customerId)
+                .customerId(customerId)
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .build();
@@ -63,7 +63,7 @@ class CreateBookingUseCaseImplTest {
 
         BookingEntity bookingEntity = BookingEntity.builder()
                 .id(3L)
-                .customer_id(appUser)
+                .customerId(appUser)
                 .eventFightNight(eventFightNight)
                 .build();
 
@@ -89,7 +89,7 @@ class CreateBookingUseCaseImplTest {
         Long customerId = 2L;
         CreateBookingRequest request = CreateBookingRequest.builder()
                 .eventFightNightId(eventFightNightId)
-                .customer_id(customerId)
+                .customerId(customerId)
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .build();
@@ -113,7 +113,7 @@ class CreateBookingUseCaseImplTest {
         Long customerId = 2L;
         CreateBookingRequest request = CreateBookingRequest.builder()
                 .eventFightNightId(eventFightNightId)
-                .customer_id(customerId)
+                .customerId(customerId)
                 .name("John Doe")
                 .email("john.doe@example.com")
                 .build();

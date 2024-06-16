@@ -50,7 +50,7 @@ public class EventFightNightController {
     }
 
     @RolesAllowed({"ADMINISTRATOR", "EVENT_ORGANIZER"})
-    @PostMapping("/{id}/addEvent")
+    @PostMapping("/addEvent")
     public ResponseEntity<AddEventToFightNightResponse> addEventToFightNight(@RequestBody AddEventToFightNightRequest request) {
         AddEventToFightNightResponse response = addEventToFightNightUseCase.addEventToFightNight(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);

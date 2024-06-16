@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateEventResponse {
-    private Long Id;
+    private Long id;
     private EventStatus status;
 }

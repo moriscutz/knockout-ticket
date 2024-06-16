@@ -30,7 +30,7 @@ public class CreateBookingUseCaseImpl implements CreateBookingUseCase {
         EventFightNightEntity eventFightNight = eventFightNightRepository.findById(request.getEventFightNightId())
                 .orElseThrow(() -> new EventFightNightNotFoundException(request.getEventFightNightId()));
 
-        Optional<AppUserEntity> appUser = appUserRepository.findById(request.getCustomer_id());
+        Optional<AppUserEntity> appUser = appUserRepository.findById(request.getCustomerId());
 
 
 
@@ -42,7 +42,7 @@ public class CreateBookingUseCaseImpl implements CreateBookingUseCase {
         AppUserEntity appUserEntity = appUser.get();
 
         BookingEntity booking = BookingEntity.builder()
-                .customer_id(appUserEntity)
+                .customerId(appUserEntity)
                 .name(request.getName())
                 .email(request.getEmail())
                 .eventFightNight(eventFightNight)

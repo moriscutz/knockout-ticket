@@ -31,5 +31,5 @@ public class BookingEntity {
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     @JsonBackReference
-    private AppUserEntity customer_id;
+    private AppUserEntity customerId;
 }

@@ -28,8 +28,7 @@ class LoginControllerTest {
     }
 
     @Test
-    void testLogin() {
-        // Arrange
+    void shouldLogin() {
         LoginRequest request = new LoginRequest("username", "password");
         LoginResponse response = LoginResponse.builder()
                 .accessToken("dummyAccessToken")
@@ -37,10 +36,8 @@ class LoginControllerTest {
 
         when(loginUseCase.login(request)).thenReturn(response);
 
-        // Act
         ResponseEntity<LoginResponse> result = loginController.login(request);
 
-        // Assert
         assertEquals(HttpStatus.CREATED, result.getStatusCode());
         assertEquals(response, result.getBody());
         verify(loginUseCase).login(request);

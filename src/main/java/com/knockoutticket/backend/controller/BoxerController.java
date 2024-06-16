@@ -8,7 +8,6 @@ import com.knockoutticket.backend.domain.responses.CreateBoxerResponse;
 import com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse;
 import com.knockoutticket.backend.domain.responses.GetBoxerResponse;
 import com.knockoutticket.backend.domain.responses.UpdateBoxerResponse;
-import io.swagger.models.Response;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -83,7 +82,7 @@ public class BoxerController {
     @PutMapping("records/{id}")
     public ResponseEntity<Void> updateBoxerRecord(@PathVariable Long id, @Valid @RequestBody UpdateBoxerAddToRecordRequest request){
         request.setId(id);
-        updateBoxerAddToRecordUseCase.UpdateBoxerRecord(id, request);
+        updateBoxerAddToRecordUseCase.updateBoxerRecord(id, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

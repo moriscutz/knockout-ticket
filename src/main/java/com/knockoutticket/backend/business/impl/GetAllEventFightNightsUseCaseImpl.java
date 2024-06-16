@@ -8,7 +8,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +21,6 @@ public class GetAllEventFightNightsUseCaseImpl implements GetAllEventFightNights
         return eventFightNights.stream()
                 .map(EventFightNightConverter::toEventFightNightDTO)
                 .map(dto -> new GetEventFightNightResponse(dto.getId(), dto.getTitle(), dto.getDate(), dto.getStartTime(), dto.getEndTime(), dto.getPlace(), dto.getEvents()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

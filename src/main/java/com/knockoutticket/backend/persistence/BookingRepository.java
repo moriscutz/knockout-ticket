@@ -12,9 +12,9 @@ import java.util.List;
 
 public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
 
-    @Query("SELECT new com.knockoutticket.backend.domain.responses.GetBookingsCountByCustomerResponse(b.customer_id, COUNT(b)) " +
+    @Query("SELECT new com.knockoutticket.backend.domain.responses.GetBookingsCountByCustomerResponse(b.customerId, COUNT(b)) " +
             "FROM BookingEntity b " +
-            "GROUP BY b.customer_id " +
+            "GROUP BY b.customerId " +
             "ORDER BY COUNT(b) DESC")
     List<GetBookingsCountByCustomerResponse> countBookingsByCustomer();
 

@@ -1,6 +1,7 @@
 package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.*;
+import com.knockoutticket.backend.config.security.token.AccessTokenDecoder;
 import com.knockoutticket.backend.domain.models.AppUser;
 import com.knockoutticket.backend.domain.models.UserType;
 import com.knockoutticket.backend.domain.requests.CreateAppUserRequest;
@@ -9,71 +10,80 @@ import com.knockoutticket.backend.domain.responses.CreateAppUserResponse;
 import com.knockoutticket.backend.domain.responses.GetAppUserResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@WebMvcTest(AppUserController.class)
 class AppUserControllerTest {
 
-    @Mock
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
     private CreateAppUserUseCase createAppUserUseCase;
 
-    @Mock
+    @MockBean
     private GetAppUserUseCase getAppUserUseCase;
 
-    @Mock
+    @MockBean
     private UpdateAppUserUseCase updateAppUserUseCase;
 
-    @Mock
+    @MockBean
     private DeleteAppUserUseCase deleteAppUserUseCase;
 
-    @Mock
+    @MockBean
     private GetAllAppUsersUseCase getAllAppUsersUseCase;
 
-    @InjectMocks
-    private AppUserController controller;
+    @MockBean
+    private AccessTokenDecoder accessTokenDecoder;
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
-
     @Test
-    void testCreateAppUser() {
-        //arange
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void shouldCreateAppUser() throws Exception {
         CreateAppUserRequest request = CreateAppUserRequest.builder()
                 .username("testuser")
                 .email("testuser@gmail.com")
                 .password("password123")
                 .build();
 
-        CreateAppUserResponse expectedResponse = new CreateAppUserResponse(1L);
+        CreateAppUserResponse response = new CreateAppUserResponse(1L);
 
-        when(createAppUserUseCase.createAppUser(any(CreateAppUserRequest.class))).thenReturn(expectedResponse);
+        when(createAppUserUseCase.createAppUser(any(CreateAppUserRequest.class))).thenReturn(response);
 
-        //act
-        ResponseEntity<CreateAppUserResponse> response = controller.createAppUser(request);
-
-
-        //assert
-        assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
-        verify(createAppUserUseCase).createAppUser(any(CreateAppUserRequest.class));
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"testuser\",\"email\":\"testuser@gmail.com\",\"password\":\"password123\"}")
+                        .with(csrf()))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").value(1L));
     }
 
-
     @Test
-    void testGetAppUser() {
+    @WithMockUser(roles = {"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
+    void shouldGetAppUserById() throws Exception {
         Long userId = 1L;
         AppUser user = AppUser.builder()
                 .id(userId)
@@ -82,18 +92,19 @@ class AppUserControllerTest {
                 .password("password")
                 .userType(Collections.singleton(UserType.NORMAL_USER))
                 .build();
-        GetAppUserResponse expectedResponse = new GetAppUserResponse(user);
+        GetAppUserResponse response = new GetAppUserResponse(user);
 
-        when(getAppUserUseCase.getAppUser(userId)).thenReturn(expectedResponse);
+        when(getAppUserUseCase.getAppUser(userId)).thenReturn(response);
 
-        ResponseEntity<GetAppUserResponse> response = controller.getAppUser(userId);
-
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponse, response.getBody());
+        mockMvc.perform(get("/users/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.user.id").value(1L))
+                .andExpect(jsonPath("$.user.username").value("sampleuser"));
     }
 
     @Test
-    void testUpdateAppUser() {
+    @WithMockUser(roles = {"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
+    void shouldUpdateAppUser() throws Exception {
         Long userId = 1L;
         UpdateAppUserRequest request = new UpdateAppUserRequest();
         request.setId(userId);
@@ -102,29 +113,27 @@ class AppUserControllerTest {
         request.setPassword("newPassword");
         request.setUserType(UserType.NORMAL_USER);
 
-        doNothing().when(updateAppUserUseCase).updateAppUser(eq(userId), any(UpdateAppUserRequest.class));
+        doNothing().when(updateAppUserUseCase).updateAppUser(anyLong(), any(UpdateAppUserRequest.class));
 
-        ResponseEntity<Void> response = controller.updateAppUser(userId, request);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(updateAppUserUseCase).updateAppUser(eq(userId), any(UpdateAppUserRequest.class));
+        mockMvc.perform(put("/users/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"id\":1,\"username\":\"newUsername\",\"email\":\"newemail@example.com\",\"password\":\"newPassword\",\"userType\":\"NORMAL_USER\"}")
+                        .with(csrf()))
+                .andExpect(status().isNoContent());
     }
 
-
     @Test
-    void testDeleteAppUser() {
-        Long userId = 1L;
-        doNothing().when(deleteAppUserUseCase).deleteAppUser(userId);
+    @WithMockUser(roles = {"ADMINISTRATOR"})
+    void shouldDeleteAppUser() throws Exception {
+        doNothing().when(deleteAppUserUseCase).deleteAppUser(anyLong());
 
-        ResponseEntity<Void> response = controller.deleteAppUser(userId);
-
-        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
-        verify(deleteAppUserUseCase).deleteAppUser(userId);
+        mockMvc.perform(delete("/users/1").with(csrf()))
+                .andExpect(status().isNoContent());
     }
 
-
     @Test
-    void testGetAllAppUsers() {
+    @WithMockUser(roles = {"NORMAL_USER", "ADMINISTRATOR", "EVENT_ORGANIZER"})
+    void shouldGetAllAppUsers() throws Exception {
         AppUser user1 = AppUser.builder()
                 .id(1L)
                 .username("userOne")
@@ -141,16 +150,22 @@ class AppUserControllerTest {
                 .userType(Collections.singleton(UserType.ADMINISTRATOR))
                 .build();
 
-        List<GetAppUserResponse> expectedResponses = Arrays.asList(
+        List<GetAppUserResponse> responses = Arrays.asList(
                 new GetAppUserResponse(user1),
                 new GetAppUserResponse(user2)
         );
-        when(getAllAppUsersUseCase.getAllAppUsers()).thenReturn(expectedResponses);
 
-        ResponseEntity<List<GetAppUserResponse>> response = controller.getAllAppUsers();
+        when(getAllAppUsersUseCase.getAllAppUsers()).thenReturn(responses);
 
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals(expectedResponses, response.getBody());
+        mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].user.id").value(1L))
+                .andExpect(jsonPath("$[0].user.username").value("userOne"))
+                .andExpect(jsonPath("$[1].user.id").value(2L))
+                .andExpect(jsonPath("$[1].user.username").value("userTwo"));
     }
 
+    private MockHttpServletRequestBuilder withCsrf(MockHttpServletRequestBuilder builder) {
+        return builder.with(csrf());
+    }
 }

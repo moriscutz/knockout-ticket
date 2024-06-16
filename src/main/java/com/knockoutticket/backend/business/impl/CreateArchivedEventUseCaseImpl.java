@@ -5,7 +5,6 @@ import com.knockoutticket.backend.business.DeleteEventUseCase;
 import com.knockoutticket.backend.business.exception.BoxerNotFoundException;
 import com.knockoutticket.backend.business.exception.OrganizerNotFoundException;
 import com.knockoutticket.backend.domain.requests.CreateArchivedEventRequest;
-import com.knockoutticket.backend.domain.requests.CreateBookingRequest;
 import com.knockoutticket.backend.domain.responses.CreateArchivedEventResponse;
 import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.ArchivedEventRepository;
@@ -14,7 +13,6 @@ import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.ArchivedEventEntity;
 import com.knockoutticket.backend.persistence.entity.BoxerEntity;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.event.spi.DeleteEvent;
 import org.springframework.stereotype.Service;
 
 @Service

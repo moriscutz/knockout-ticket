@@ -64,7 +64,7 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
-    void testCreateEventFightNight() throws Exception {
+    void shouldCreateEventFightNight() throws Exception {
         CreateEventFightNightRequest request = new CreateEventFightNightRequest();
         CreateEventFightNightResponse response = new CreateEventFightNightResponse(1L);
 
@@ -80,7 +80,7 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER", "NORMAL_USER"})
-    void testGetEventFightNight() throws Exception {
+    void shouldGetEventFightNightById() throws Exception {
         GetEventFightNightResponse response = new GetEventFightNightResponse(1L, "Test Event", null, null, null, "Test Venue", Collections.emptyList());
 
         when(getEventFightNightUseCase.getEventFightNight(anyLong())).thenReturn(response);
@@ -93,7 +93,7 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER", "NORMAL_USER"})
-    void testGetAllEventFightNights() throws Exception {
+    void shouldGetAllEventFightNights() throws Exception {
         GetEventFightNightResponse response = new GetEventFightNightResponse(1L, "Test Event", null, null, null, "Test Venue", Collections.emptyList());
         List<GetEventFightNightResponse> responses = List.of(response);
 
@@ -107,13 +107,13 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
-    void testAddEventToFightNight() throws Exception {
+    void shouldAddEventToFightNight() throws Exception {
         AddEventToFightNightRequest request = new AddEventToFightNightRequest();
         AddEventToFightNightResponse response = new AddEventToFightNightResponse(1L);
 
         when(addEventToFightNightUseCase.addEventToFightNight(any(AddEventToFightNightRequest.class))).thenReturn(response);
 
-        mockMvc.perform(post("/eventFightNights/1/addEvent")
+        mockMvc.perform(post("/eventFightNights/addEvent")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"eventFightNightId\":1,\"boxerId1\":1,\"boxerId2\":2,\"organizerId\":1,\"eventDate\":\"2023-12-31T18:00\",\"eventStatus\":\"Scheduled\",\"eventPlace\":\"Test Venue\"}")
                         .with(csrf()))
@@ -123,7 +123,7 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
-    void testUpdateEventFightNight() throws Exception {
+    void shouldUpdateEventFightNight() throws Exception {
         UpdateEventFightNightRequest request = new UpdateEventFightNightRequest();
         UpdateEventFightNightResponse response = new UpdateEventFightNightResponse(1L, "Updated Event", null, null, null, "Updated Venue");
 
@@ -140,12 +140,11 @@ class EventFightNightControllerTest {
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
-    void testDeleteEventFightNight() throws Exception {
+    void shouldDeleteEventFightNight() throws Exception {
         mockMvc.perform(delete("/eventFightNights/1").with(csrf()))
                 .andExpect(status().isNoContent());
     }
 
-    // CSRF setup method
     private MockHttpServletRequestBuilder withCsrf(MockHttpServletRequestBuilder builder) {
         return builder.with(csrf());
     }
