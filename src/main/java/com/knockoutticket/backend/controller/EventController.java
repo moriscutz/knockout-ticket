@@ -43,7 +43,7 @@ public class EventController {
     }
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR", "NORMAL_USER"})
-    @PostMapping("/{eventId}/boxers")
+    @GetMapping("/{eventId}/boxers")
     public ResponseEntity<GetEventBoxersResponse> getEventBoxers(@PathVariable Long eventId){
         GetEventBoxersRequest request = GetEventBoxersRequest.builder()
                 .eventId(eventId)

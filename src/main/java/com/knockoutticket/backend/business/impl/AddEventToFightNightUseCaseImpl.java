@@ -48,7 +48,7 @@ public class AddEventToFightNightUseCaseImpl implements AddEventToFightNightUseC
                 .boxer1(boxer1)
                 .boxer2(boxer2)
                 .organizer(organizer)
-                .date(request.getDate())
+                .date(request.getEventDate())
                 .status(EventStatus.valueOf(request.getStatus().toUpperCase()))
                 .place(request.getPlace())
                 .build();

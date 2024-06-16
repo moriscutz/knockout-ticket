@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,8 @@ public class ArchivedEventController {
 
     @RolesAllowed({"EVENT_ORGANIZER"})
     @PostMapping
-    public ResponseEntity<CreateArchivedEventResponse> createArchivedEvent(CreateArchivedEventRequest request){
+    public ResponseEntity<CreateArchivedEventResponse> createArchivedEvent(@RequestBody CreateArchivedEventRequest request){
+
         CreateArchivedEventResponse response = createArchivedEventUseCase.createArchivedEvent(request);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

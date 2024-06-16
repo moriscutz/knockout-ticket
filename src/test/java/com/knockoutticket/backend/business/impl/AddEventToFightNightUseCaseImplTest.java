@@ -3,7 +3,6 @@ package com.knockoutticket.backend.business.impl;
 import com.knockoutticket.backend.business.exception.BoxerNotFoundException;
 import com.knockoutticket.backend.business.exception.EventFightNightNotFoundException;
 import com.knockoutticket.backend.business.exception.OrganizerNotFoundException;
-import com.knockoutticket.backend.domain.models.EventStatus;
 import com.knockoutticket.backend.domain.requests.AddEventToFightNightRequest;
 import com.knockoutticket.backend.domain.responses.AddEventToFightNightResponse;
 import com.knockoutticket.backend.persistence.AppUserRepository;
@@ -21,12 +20,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class AddEventToFightNightUseCaseImplTest {
+class AddEventToFightNightUseCaseImplTest {
 
     @Mock
     private EventFightNightRepository eventFightNightRepository;
@@ -49,7 +49,7 @@ public class AddEventToFightNightUseCaseImplTest {
     }
 
     @Test
-    void testAddEventToFightNight_Success() {
+    void addEventToFightNight_ShouldSucceed_WhenAllDataIsValid() {
         // Arrange
         Long eventFightNightId = 1L;
         Long boxerId1 = 2L;
@@ -64,6 +64,7 @@ public class AddEventToFightNightUseCaseImplTest {
 
         EventFightNightEntity mockEventFightNightEntity = new EventFightNightEntity();
         mockEventFightNightEntity.setId(eventFightNightId);
+        mockEventFightNightEntity.setEvents(new ArrayList<>());
 
         BoxerEntity mockBoxer1 = new BoxerEntity();
         mockBoxer1.setId(boxerId1);
@@ -72,10 +73,14 @@ public class AddEventToFightNightUseCaseImplTest {
         AppUserEntity mockOrganizer = new AppUserEntity();
         mockOrganizer.setId(organizerId);
 
+        EventEntity mockEventEntity = new EventEntity();
+        mockEventEntity.setId(5L);
+
         when(eventFightNightRepository.findById(eventFightNightId)).thenReturn(Optional.of(mockEventFightNightEntity));
         when(boxerRepository.findById(boxerId1)).thenReturn(Optional.of(mockBoxer1));
         when(boxerRepository.findById(boxerId2)).thenReturn(Optional.of(mockBoxer2));
         when(appUserRepository.findById(organizerId)).thenReturn(Optional.of(mockOrganizer));
+        when(eventRepository.save(any(EventEntity.class))).thenReturn(mockEventEntity);
 
         // Act
         AddEventToFightNightResponse response = addEventToFightNightUseCase.addEventToFightNight(request);
@@ -83,13 +88,13 @@ public class AddEventToFightNightUseCaseImplTest {
         // Assert
         assertNotNull(response);
         assertNotNull(response.getEventId());
-        assertEquals(mockEventFightNightEntity.getEvents().size(), 1);
+        assertEquals(1, mockEventFightNightEntity.getEvents().size());
         verify(eventRepository, times(1)).save(any(EventEntity.class));
         verify(eventFightNightRepository, times(1)).save(any(EventFightNightEntity.class));
     }
 
     @Test
-    void testAddEventToFightNight_EventFightNightNotFound() {
+    void addEventToFightNight_ShouldThrowException_WhenEventFightNightNotFound() {
         // Arrange
         Long nonExistentEventFightNightId = 999L;
 
@@ -108,7 +113,7 @@ public class AddEventToFightNightUseCaseImplTest {
     }
 
     @Test
-    void testAddEventToFightNight_BoxerNotFound() {
+    void addEventToFightNight_ShouldThrowException_WhenBoxerNotFound() {
         // Arrange
         Long eventFightNightId = 1L;
         Long nonExistentBoxerId = 999L;
@@ -131,7 +136,7 @@ public class AddEventToFightNightUseCaseImplTest {
     }
 
     @Test
-    void testAddEventToFightNight_OrganizerNotFound() {
+    void addEventToFightNight_ShouldThrowException_WhenOrganizerNotFound() {
         // Arrange
         Long eventFightNightId = 1L;
         Long nonExistentOrganizerId = 999L;

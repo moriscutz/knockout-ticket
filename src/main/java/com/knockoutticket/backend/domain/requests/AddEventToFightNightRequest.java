@@ -19,7 +19,7 @@ public class AddEventToFightNightRequest {
     @NotNull
     private Long organizerId;
     @NotNull
-    private LocalDateTime date;
+    private LocalDateTime eventDate;
     @NotBlank
     private String status;
     @NotBlank

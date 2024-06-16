@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BoxerConverterTest {
 
     @Test
-    void testToBoxerDTO() {
+    void convertBoxerEntityToBoxerDTO_ShouldReturnValidBoxerDTO_WhenGivenValidBoxerEntity() {
         // Arrange
         BoxerEntity boxerEntity = BoxerEntity.builder()
                 .id(1L)
@@ -38,7 +38,7 @@ class BoxerConverterTest {
     }
 
     @Test
-    void testToBoxerEntity() {
+    void convertBoxerDTOToBoxerEntity_ShouldReturnValidBoxerEntity_WhenGivenValidBoxerDTO() {
         // Arrange
         Boxer boxer = Boxer.builder()
                 .id(1L)
