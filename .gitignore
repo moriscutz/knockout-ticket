@@ -37,4 +37,4 @@ out/
 .vscode/
 
 ### Ignore JWT secret file ###
-!**/src/main/resources/config/jwt-secret.properties
+/jwt-secret.properties
