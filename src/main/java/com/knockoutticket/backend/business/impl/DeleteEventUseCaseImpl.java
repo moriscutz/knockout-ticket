@@ -15,7 +15,7 @@ public class DeleteEventUseCaseImpl implements DeleteEventUseCase {
     @Override
     public void deleteEvent(Long id) {
         if (!eventRepository.existsById(id)) {
-             new EventNotFoundException();
+            throw new EventNotFoundException();
         }
         eventRepository.deleteById(id);
     }

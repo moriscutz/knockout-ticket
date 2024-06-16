@@ -19,7 +19,7 @@ public class DeleteEventFightNightUseCaseImpl implements DeleteEventFightNightUs
     @Override
     public void deleteEventFightNight(Long id) {
         if (!eventFightNightRepository.existsById(id)) {
-            new EventFightNightNotFoundException(id);
+           throw new EventFightNightNotFoundException(id);
         }
         else {
             eventFightNightRepository.deleteAllEventsByFightNightId(id);

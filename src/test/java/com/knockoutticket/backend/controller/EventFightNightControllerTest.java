@@ -2,7 +2,6 @@ package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.*;
 import com.knockoutticket.backend.config.security.token.AccessTokenDecoder;
-import com.knockoutticket.backend.domain.models.Event;
 import com.knockoutticket.backend.domain.requests.AddEventToFightNightRequest;
 import com.knockoutticket.backend.domain.requests.CreateEventFightNightRequest;
 import com.knockoutticket.backend.domain.requests.UpdateEventFightNightRequest;
@@ -12,28 +11,21 @@ import com.knockoutticket.backend.domain.responses.GetEventFightNightResponse;
 import com.knockoutticket.backend.domain.responses.UpdateEventFightNightResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.request.RequestPostProcessor;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -62,50 +54,26 @@ class EventFightNightControllerTest {
     @MockBean
     private DeleteEventFightNightUseCase deleteEventFightNightUseCase;
 
-    @TestConfiguration
-    static class TestConfig {
-        @Bean
-        public AccessTokenDecoder accessTokenDecoder() {
-            return Mockito.mock(AccessTokenDecoder.class);
-        }
-    }
-
-    private GetEventFightNightResponse getEventFightNightResponse;
-    private CreateEventFightNightResponse createEventFightNightResponse;
-    private AddEventToFightNightResponse addEventToFightNightResponse;
-    private UpdateEventFightNightResponse updateEventFightNightResponse;
+    @MockBean
+    private AccessTokenDecoder accessTokenDecoder;
 
     @BeforeEach
     void setUp() {
-        getEventFightNightResponse = new GetEventFightNightResponse(
-                1L, "Event Title", LocalDate.now(), LocalTime.now(), LocalTime.now().plusHours(2), "Event Place", List.of(new Event()));
-        createEventFightNightResponse = new CreateEventFightNightResponse(1L);
-        addEventToFightNightResponse = new AddEventToFightNightResponse(1L);
-        updateEventFightNightResponse = new UpdateEventFightNightResponse(1L, "Updated Title", LocalDate.now(), LocalTime.now(), LocalTime.now().plusHours(2), "Updated Place");
-    }
-
-    private RequestPostProcessor csrfToken() {
-        return request -> {
-            HttpSessionCsrfTokenRepository repo = new HttpSessionCsrfTokenRepository();
-            CsrfToken token = repo.generateToken(request);
-            MockHttpServletResponse response = new MockHttpServletResponse();
-            repo.saveToken(token, request, response);
-            request.setAttribute(CsrfToken.class.getName(), token);
-            request.setAttribute(token.getParameterName(), token);
-            return request;
-        };
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
     void testCreateEventFightNight() throws Exception {
-        Mockito.when(createEventFightNightUseCase.createEventFightNight(any(CreateEventFightNightRequest.class)))
-                .thenReturn(createEventFightNightResponse);
+        CreateEventFightNightRequest request = new CreateEventFightNightRequest();
+        CreateEventFightNightResponse response = new CreateEventFightNightResponse(1L);
+
+        when(createEventFightNightUseCase.createEventFightNight(any(CreateEventFightNightRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/eventFightNights")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"Event Title\", \"place\": \"Event Place\", \"date\": \"2024-01-01\", \"startTime\": \"10:00:00\", \"endTime\": \"12:00:00\"}")
-                        .with(csrfToken()))
+                        .content("{\"title\":\"Test Event\",\"date\":\"2023-12-31\",\"startTime\":\"18:00\",\"endTime\":\"23:00\",\"place\":\"Test Venue\"}")
+                        .with(csrf()))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L));
     }
@@ -113,61 +81,72 @@ class EventFightNightControllerTest {
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER", "NORMAL_USER"})
     void testGetEventFightNight() throws Exception {
-        Mockito.when(getEventFightNightUseCase.getEventFightNight(anyLong()))
-                .thenReturn(getEventFightNightResponse);
+        GetEventFightNightResponse response = new GetEventFightNightResponse(1L, "Test Event", null, null, null, "Test Venue", Collections.emptyList());
+
+        when(getEventFightNightUseCase.getEventFightNight(anyLong())).thenReturn(response);
 
         mockMvc.perform(get("/eventFightNights/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.title").value("Event Title"))
-                .andExpect(jsonPath("$.place").value("Event Place"));
+                .andExpect(jsonPath("$.title").value("Test Event"));
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER", "NORMAL_USER"})
     void testGetAllEventFightNights() throws Exception {
-        List<GetEventFightNightResponse> allEvents = Arrays.asList(getEventFightNightResponse);
-        Mockito.when(getAllEventFightNightsUseCase.getAllEventFightNights()).thenReturn(allEvents);
+        GetEventFightNightResponse response = new GetEventFightNightResponse(1L, "Test Event", null, null, null, "Test Venue", Collections.emptyList());
+        List<GetEventFightNightResponse> responses = List.of(response);
+
+        when(getAllEventFightNightsUseCase.getAllEventFightNights()).thenReturn(responses);
 
         mockMvc.perform(get("/eventFightNights"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].id").value(1L))
-                .andExpect(jsonPath("$[0].title").value("Event Title"))
-                .andExpect(jsonPath("$[0].place").value("Event Place"));
+                .andExpect(jsonPath("$[0].title").value("Test Event"));
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
     void testAddEventToFightNight() throws Exception {
-        Mockito.when(addEventToFightNightUseCase.addEventToFightNight(any(AddEventToFightNightRequest.class)))
-                .thenReturn(addEventToFightNightResponse);
+        AddEventToFightNightRequest request = new AddEventToFightNightRequest();
+        AddEventToFightNightResponse response = new AddEventToFightNightResponse(1L);
+
+        when(addEventToFightNightUseCase.addEventToFightNight(any(AddEventToFightNightRequest.class))).thenReturn(response);
 
         mockMvc.perform(post("/eventFightNights/1/addEvent")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"eventId\": 1, \"fightNightId\": 1}")
-                        .with(csrfToken()))
+                        .content("{\"eventFightNightId\":1,\"boxerId1\":1,\"boxerId2\":2,\"organizerId\":1,\"eventDate\":\"2023-12-31T18:00\",\"eventStatus\":\"Scheduled\",\"eventPlace\":\"Test Venue\"}")
+                        .with(csrf()))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.id").value(1L));
+                .andExpect(jsonPath("$.eventId").value(1L));
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
     void testUpdateEventFightNight() throws Exception {
-        Mockito.when(updateEventFightNightUseCase.updateEventFightNight(anyLong(), any(UpdateEventFightNightRequest.class)))
-                .thenReturn(updateEventFightNightResponse);
+        UpdateEventFightNightRequest request = new UpdateEventFightNightRequest();
+        UpdateEventFightNightResponse response = new UpdateEventFightNightResponse(1L, "Updated Event", null, null, null, "Updated Venue");
+
+        when(updateEventFightNightUseCase.updateEventFightNight(anyLong(), any(UpdateEventFightNightRequest.class))).thenReturn(response);
 
         mockMvc.perform(put("/eventFightNights/1")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"title\": \"Updated Title\", \"place\": \"Updated Place\", \"date\": \"2024-01-01\", \"startTime\": \"10:00:00\", \"endTime\": \"12:00:00\"}")
-                        .with(csrfToken()))
+                        .content("{\"title\":\"Updated Event\",\"date\":\"2023-12-31\",\"startTime\":\"18:00\",\"endTime\":\"23:00\",\"place\":\"Updated Venue\"}")
+                        .with(csrf()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(1L));
+                .andExpect(jsonPath("$.id").value(1L))
+                .andExpect(jsonPath("$.title").value("Updated Event"));
     }
 
     @Test
     @WithMockUser(roles = {"ADMINISTRATOR", "EVENT_ORGANIZER"})
     void testDeleteEventFightNight() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/eventFightNights/1").with(csrfToken()))
+        mockMvc.perform(delete("/eventFightNights/1").with(csrf()))
                 .andExpect(status().isNoContent());
+    }
+
+    // CSRF setup method
+    private MockHttpServletRequestBuilder withCsrf(MockHttpServletRequestBuilder builder) {
+        return builder.with(csrf());
     }
 }
