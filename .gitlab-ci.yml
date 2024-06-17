@@ -9,51 +9,60 @@ variables:
 stages:
   - build
   - test
-  - sonarqube-check
   - dockerize
   - deploy
 
 build:
+  image: gradle:7.5.0-jdk17
   stage: build
   script:
-    - ./gradlew assemble
+    - gradle clean assemble
+  artifacts:
+    paths:
+      - build/libs/*.jar
+    expire_in: 1 hour
 
 test:
+  image: gradle:7.5.0-jdk17
   stage: test
   script:
-    - ./gradlew test
-
-sonarqube-check:
-  stage: sonarqube-check
-  script:
-    - ./gradlew test sonar jacocoTestReport
+    - gradle test
 
 dockerize:
-  stage: dockerize
   image: docker:19.03.12
   services:
     - docker:dind
+  stage: dockerize
   before_script:
     - echo "Verifying DOCKER_HUB_USERNAME exists..."
-    - if [ -n "$DOCKER_HUB_USERNAME" ]; then echo "Username is set"; else echo { "Username is NOT set"  }
+    - if ($env:DOCKER_HUB_USERNAME) { echo "Username is set" } else { echo "Username is NOT set" }
     - echo "Verifying DOCKER_HUB_PASSWORD exists..."
-    - if [ -n "$DOCKER_HUB_PASSWORD" ]; then echo "Password is set"; else echo { "Password is NOT set"  }
+    - if ($env:DOCKER_HUB_PASSWORD) { echo "Password is set" } else { echo "Password is NOT set" }
+
   script:
     - echo "Attempting to login to Docker Hub..."
-    - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_USERNAME" --password-stdin
-    - docker build -t $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG .
-    - docker push $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
+    - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+    - |
+      $networkCreation = docker network create drinke_network_staging
+      if ($LastExitCode -ne 0) { echo "Network already exists or cannot be created" }
+    - docker pull mysql:5.7
+    - |
+      $containerRun = docker run --net drinke_network_staging --name drinke_db_staging -e MYSQL_DATABASE=drinke -e MYSQL_ROOT_PASSWORD=1234 -p 3390:3306 -d mysql:5.7
+      if ($LastExitCode -ne 0) { echo "MySQL container is already running or could not be started" }
+    - docker build -t $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG .
+    - docker push $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG
   only:
-    - master
+    - main
 
 deploy:
-  stage: deploy
   image: docker:19.03.12
   services:
     - docker:dind
+  stage: deploy
   script:
     - echo "Deploying application from Docker Hub"
-    - docker pull $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
-    - docker run -d -p 8090:8080 --name knockoutticket_backend_j --network host $DOCKER_IMAGE:$CI_COMMIT_REF_SLUG
+    - docker pull $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG
+    - |
+      docker run -d -p 8090:8080 --net=drinke_network_staging --env SPRING_PROFILES_ACTIVE=staging --name=drinke_be_staging $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG || echo "Deployment container could not be started"
   only:
-    - master
+    - main

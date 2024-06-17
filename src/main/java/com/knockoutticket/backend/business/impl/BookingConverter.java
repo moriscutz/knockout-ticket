@@ -1,25 +1,48 @@
 package com.knockoutticket.backend.business.impl;
 
 import com.knockoutticket.backend.domain.models.Booking;
+import com.knockoutticket.backend.domain.models.Event;
+import com.knockoutticket.backend.domain.models.EventFightNight;
 import com.knockoutticket.backend.domain.responses.GetBookingsForUserResponse;
 import com.knockoutticket.backend.persistence.entity.BookingEntity;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 public class BookingConverter {
 
     public static Booking toBooking(BookingEntity bookingEntity) {
+        EventFightNight eventFightNight = EventFightNight.builder()
+                .id(bookingEntity.getEventFightNight().getId())
+                .title(bookingEntity.getEventFightNight().getTitle())
+                .date(bookingEntity.getEventFightNight().getDate())
+                .startTime(bookingEntity.getEventFightNight().getStartTime())
+                .endTime(bookingEntity.getEventFightNight().getEndTime())
+                .place(bookingEntity.getEventFightNight().getPlace())
+                .events(bookingEntity.getEventFightNight().getEvents().stream()
+                        .map(event -> Event.builder()
+                                .id(event.getId())
+                                .boxerId1(event.getBoxer1().getId())
+                                .boxerId2(event.getBoxer2().getId())
+                                .date(event.getDate())
+                                .place(event.getPlace())
+                                .status(event.getStatus())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
+
         return Booking.builder()
                 .id(bookingEntity.getId())
                 .name(bookingEntity.getName())
                 .email(bookingEntity.getEmail())
-                .eventFightNightId(bookingEntity.getEventFightNight().getId())
+                .eventFightNight(eventFightNight)
                 .build();
     }
 
     public static GetBookingsForUserResponse toGetBookingsForUserResponse(List<BookingEntity> bookings) {
         List<Booking> bookingDTOs = bookings.stream()
                 .map(BookingConverter::toBooking)
-                .toList();
+                .collect(Collectors.toList());
 
         return new GetBookingsForUserResponse(bookingDTOs);
     }
