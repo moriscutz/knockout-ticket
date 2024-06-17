@@ -9,7 +9,7 @@ variables:
 stages:
   - build
   - test
-  - dockerize
+  - dockerized
   - deploy
 
 build:
@@ -28,7 +28,7 @@ test:
   script:
     - gradle test
 
-dockerize:
+dockerized:
   image: docker:19.03.12
   services:
     - docker:dind
@@ -52,7 +52,7 @@ dockerize:
     - docker build -t $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG
   only:
-    - main
+    - development
 
 deploy:
   image: docker:19.03.12
@@ -65,4 +65,4 @@ deploy:
     - |
       docker run -d -p 8090:8080 --net=drinke_network_staging --env SPRING_PROFILES_ACTIVE=staging --name=drinke_be_staging $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG || echo "Deployment container could not be started"
   only:
-    - main
+    - development
