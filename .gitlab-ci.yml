@@ -35,24 +35,22 @@ dockerize:
   stage: dockerize
   before_script:
     - echo "Verifying DOCKER_HUB_USERNAME exists..."
-    - if ($env:DOCKER_HUB_USERNAME) { echo "Username is set" } else { echo "Username is NOT set" }
+    - if [ -z "$DOCKER_HUB_USERNAME" ]; then echo "Username is NOT set"; exit 1; else echo "Username is set"; fi
     - echo "Verifying DOCKER_HUB_PASSWORD exists..."
-    - if ($env:DOCKER_HUB_PASSWORD) { echo "Password is set" } else { echo "Password is NOT set" }
+    - if [ -z "$DOCKER_HUB_PASSWORD" ]; then echo "Password is NOT set"; exit 1; else echo "Password is set"; fi
 
   script:
     - echo "Attempting to login to Docker Hub..."
     - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-    - |
-      $networkCreation = docker network create drinke_network_staging
-      if ($LastExitCode -ne 0) { echo "Network already exists or cannot be created" }
+    - docker network create knockout_ticket_staging || echo "Network already exists or cannot be created"
     - docker pull mysql:5.7
-    - |
-      $containerRun = docker run --net drinke_network_staging --name drinke_db_staging -e MYSQL_DATABASE=drinke -e MYSQL_ROOT_PASSWORD=1234 -p 3390:3306 -d mysql:5.7
-      if ($LastExitCode -ne 0) { echo "MySQL container is already running or could not be started" }
+    - docker run --net=knockout_ticket_staging --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 || echo "MySQL container is already running or could not be started"
     - docker build -t $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG
   only:
     - development
+  dependencies:
+    - build
 
 deploy:
   image: docker:19.03.12
@@ -63,6 +61,6 @@ deploy:
     - echo "Deploying application from Docker Hub"
     - docker pull $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG
     - |
-      docker run -d -p 8090:8080 --net=drinke_network_staging --env SPRING_PROFILES_ACTIVE=staging --name=drinke_be_staging $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG || echo "Deployment container could not be started"
+      docker run -d -p 8090:8080 --net=knockout_ticket_staging --env SPRING_PROFILES_ACTIVE=staging --name= $DOCKER_HUB_USERNAME/myapp:$CI_COMMIT_REF_SLUG || echo "Deployment container could not be started"
   only:
     - development
