@@ -2,17 +2,9 @@ variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
 
 stages:
-  - initialize
   - build
   - test
   - deploy
-
-initialize_network:
-  stage: initialize
-  script:
-    - docker network create --attachable --driver bridge --external knockout-network
-  tags:
-    - docker
 
 .backend:
   variables:
