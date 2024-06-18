@@ -1,15 +1,31 @@
 version: '3.8'
 
 services:
-  knockoutticket-db:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: staging
+    env_file:
+      - .env
+    depends_on:
+      - knockout-staging-db
+    networks:
+      - knockout-network
+
+  knockout-staging-db:
     image: mysql:latest
-    container_name: knockoutticket-db
     environment:
       MYSQL_ROOT_PASSWORD: 240420042501
       MYSQL_DATABASE: knockoutticket_database
     ports:
       - "3369:3306"
+    networks:
+      - knockout-network
 
 networks:
-  knockoutticketbackend_default:
+  knockout-network:
     external: true

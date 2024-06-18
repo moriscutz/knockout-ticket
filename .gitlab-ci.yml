@@ -1,71 +1,48 @@
-# Disable the Gradle daemon for Continuous Integration servers as correctness
-# is usually a priority over speed in CI environments. Using a fresh
-# runtime for each build is more reliable since the runtime is completely
-# isolated from any previous builds.
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  DOCKER_IMAGE: "ritovale/knockoutticketrepo"
 
 stages:
   - build
   - test
-  - dockerize
   - deploy
 
+.backend:
+  variables:
+    ARTIFACTS_PATHS: "build/libs/*.jar"
+
 build:
-  image: gradle:7.5.0-jdk17
   stage: build
+  extends: .backend
   script:
-    - gradle clean assemble
+    - ./gradlew build
   artifacts:
     paths:
-      - build/libs/*.jar
-    name: "knockoutticketrepo-$CI_COMMIT_REF_SLUG"
-    expire_in: 1 week
+      - "$ARTIFACTS_PATHS"
+    expire_in: 1 day
 
 test:
-  image: gradle:7.5.0-jdk17
   stage: test
   script:
-    - gradle test
-
-
-dockerize:
-  image: docker:19.03.12
-  services:
-    - docker:dind
-  stage: dockerize
-  before_script:
-    - echo "Verifying DOCKER_HUB_USERNAME exists..."
-    - if ($env:DOCKER_HUB_USERNAME) { echo "Username is set" } else { echo "Username is NOT set" }
-    - echo "Verifying DOCKER_HUB_PASSWORD exists..."
-    - if ($env:DOCKER_HUB_PASSWORD) { echo "Password is set" } else { echo "Password is NOT set" }
-    - echo "Attempting to login to Docker Hub..."
-    - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
-
-  script:
-    - |
-      $networkCreation = docker network create knockoutticketbackend_default
-      if ($LastExitCode -ne 0) { echo "Network already exists or cannot be created" }
-    - docker pull mysql:5.7
-    - |
-    - docker run --net=knockoutticketbackend_default --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 or echo "MySQL container is already running or could not be started"
-    - docker build --net=knockoutticketbackend_default -t $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG .
-    - docker push $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
-  only:
-    - development
+    - ./gradlew test
 
 deploy:
-  image: docker:19.03.12
-  services:
-    - docker:dind
   stage: deploy
+  extends: .backend
+  needs:
+    - test
+    - build
   script:
-    - echo "Deploying application from Docker Hub"
-    - docker pull $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
+    - echo "Deploying application"
     - |
-      docker run -d -p 8090:8080 --net=knockoutticketbackend_default --env SPRING_PROFILES_ACTIVE=staging --name= $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG or echo "Deployment container could not be started"
-  only:
-    - development
+      $envVars = @(
+        "DB_USERNAME=$DB_USERNAME",
+        "DB_PASSWORD=$DB_PASSWORD",
+        "JWT_SECRET=$JWT_SECRET",
+      )
+      $envVars | Out-File -FilePath .env -Encoding utf8
+    - docker-compose down
+    - docker-compose build
+    - docker-compose up -d
 
-
+after_script:
+  - echo "End CI"
