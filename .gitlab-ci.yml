@@ -50,7 +50,7 @@ dockerize:
     - docker pull mysql:5.7
     - |
     - docker run --net=knockoutticketbackend_default --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 or echo "MySQL container is already running or could not be started"
-    - docker build -t $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG .
+    - docker build --net=knockoutticketbackend_default -t $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
   only:
     - development
