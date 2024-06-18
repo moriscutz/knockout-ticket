@@ -42,16 +42,16 @@ dockerize:
     - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
 
   script:
-
-    - docker network create knockout_ticket_staging || echo "Network already exists or cannot be created"
+    - |
+      $networkCreation = docker network create knockout_ticket_staging
+      if ($LastExitCode -ne 0) { echo "Network already exists or cannot be created" }
     - docker pull mysql:5.7
-    - docker run --net=knockout_ticket_staging --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 || echo "MySQL container is already running or could not be started"
+    - |
+    - $containerRun = docker run --net=knockout_ticket_staging --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 || echo "MySQL container is already running or could not be started"
     - docker build -t $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
   only:
     - development
-  dependencies:
-    - build
 
 deploy:
   image: docker:19.03.12
