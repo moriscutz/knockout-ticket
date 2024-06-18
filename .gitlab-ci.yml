@@ -43,6 +43,9 @@ deploy:
     - docker-compose down
     - docker-compose build
     - docker-compose up -d
+  artifacts:
+    paths:
+      - .env
 
 after_script:
   - echo "End CI"
