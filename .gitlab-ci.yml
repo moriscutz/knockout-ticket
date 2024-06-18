@@ -8,7 +8,7 @@ variables:
 
 stages:
   - build
-# - test
+  - test
   - dockerize
   - deploy
 
