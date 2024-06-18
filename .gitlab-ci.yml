@@ -37,7 +37,7 @@ deploy:
       $envVars = @(
         "DB_USERNAME=$DB_USERNAME",
         "DB_PASSWORD=$DB_PASSWORD",
-        "JWT_SECRET=$JWT_SECRET",
+        "JWT_SECRET=$JWT_SECRET"
       )
       $envVars | Out-File -FilePath .env -Encoding utf8
     - docker-compose down
