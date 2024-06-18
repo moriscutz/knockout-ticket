@@ -22,10 +22,9 @@ services:
   knockout-staging-db:
     image: mysql:latest
     environment:
+      MYSQL_USER: ${DB_USERNAME}
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: knockoutticket_database
-      MYSQL_USER: ${DB_USERNAME}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3369:3306"
     networks:
