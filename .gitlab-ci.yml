@@ -29,6 +29,13 @@ test:
   script:
     - gradle test
 
+print_commit_slug:
+  stage: test
+  script:
+    - echo "CI_COMMIT_REF_SLUG is $CI_COMMIT_REF_SLUG"
+  only:
+    - development
+
 dockerize:
   image: docker:19.03.12
   services:
@@ -48,7 +55,7 @@ dockerize:
       if ($LastExitCode -ne 0) { echo "Network already exists or cannot be created" }
     - docker pull mysql:5.7
     - |
-    - docker run --net=knockoutticketbackend_default --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 || echo "MySQL container is already running or could not be started"
+    - docker run --net=knockoutticketbackend_default --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 or echo "MySQL container is already running or could not be started"
     - docker build -t $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG .
     - docker push $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
   only:
@@ -63,6 +70,8 @@ deploy:
     - echo "Deploying application from Docker Hub"
     - docker pull $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG
     - |
-      docker run -d -p 8090:8080 --net=knockoutticketbackend_default --env SPRING_PROFILES_ACTIVE=staging --name= $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG || echo "Deployment container could not be started"
+      docker run -d -p 8090:8080 --net=knockoutticketbackend_default --env SPRING_PROFILES_ACTIVE=staging --name= $DOCKER_HUB_USERNAME/knockoutticketrepo:$CI_COMMIT_REF_SLUG or echo "Deployment container could not be started"
   only:
     - development
+
+
