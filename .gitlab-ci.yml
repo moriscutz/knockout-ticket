@@ -35,9 +35,9 @@ dockerize:
   stage: dockerize
   before_script:
     - echo "Verifying DOCKER_HUB_USERNAME exists..."
-    - if [ -z "$DOCKER_HUB_USERNAME" ]; then echo "Username is NOT set"; exit 1; else echo "Username is set"; fi
+    - if ($env:DOCKER_HUB_USERNAME) { echo "Username is set" } else { echo "Username is NOT set" }
     - echo "Verifying DOCKER_HUB_PASSWORD exists..."
-    - if [ -z "$DOCKER_HUB_PASSWORD" ]; then echo "Password is NOT set"; exit 1; else echo "Password is set"; fi
+    - if ($env:DOCKER_HUB_PASSWORD) { echo "Password is set" } else { echo "Password is NOT set" }
     - echo "Attempting to login to Docker Hub..."
     - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
 
