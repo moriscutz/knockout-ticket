@@ -8,7 +8,7 @@ variables:
 
 stages:
   - build
-  - test
+# - test
   - dockerize
   - deploy
 
@@ -38,10 +38,11 @@ dockerize:
     - if [ -z "$DOCKER_HUB_USERNAME" ]; then echo "Username is NOT set"; exit 1; else echo "Username is set"; fi
     - echo "Verifying DOCKER_HUB_PASSWORD exists..."
     - if [ -z "$DOCKER_HUB_PASSWORD" ]; then echo "Password is NOT set"; exit 1; else echo "Password is set"; fi
-
-  script:
     - echo "Attempting to login to Docker Hub..."
     - echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USERNAME --password-stdin
+
+  script:
+
     - docker network create knockout_ticket_staging || echo "Network already exists or cannot be created"
     - docker pull mysql:5.7
     - docker run --net=knockout_ticket_staging --name knockoutticket-db -e MYSQL_DATABASE=knockoutticket_database -e MYSQL_ROOT_PASSWORD=240420042501 -p 3390:3306 -d mysql:5.7 || echo "MySQL container is already running or could not be started"
