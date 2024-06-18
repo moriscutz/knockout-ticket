@@ -12,6 +12,8 @@ services:
       SPRING_PROFILES_ACTIVE: staging
     depends_on:
       - knockoutticket-db
+    networks:
+      - knockoutticketbackend_default
 
   knockoutticket-db:
     image: mysql:latest
@@ -21,6 +23,9 @@ services:
       MYSQL_DATABASE: knockoutticket_database
     ports:
       - "3369:3306"
+    networks:
+      - knockoutticketbackend_default
 
-
-
+networks:
+  knockoutticketbackend_default:
+    external: true
