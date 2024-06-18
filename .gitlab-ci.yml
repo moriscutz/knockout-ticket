@@ -29,13 +29,6 @@ test:
   script:
     - gradle test
 
-print_commit_slug:
-  stage: test
-  script:
-    - echo "CI_COMMIT_REF_SLUG is $CI_COMMIT_REF_SLUG"
-  only:
-    - development
-
 dockerize:
   image: docker:19.03.12
   services:
