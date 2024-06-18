@@ -29,6 +29,7 @@ test:
   script:
     - gradle test
 
+
 dockerize:
   image: docker:19.03.12
   services:
