@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BookingConverter {
-
+    private BookingConverter() {
+        throw new IllegalStateException("This is an utility class, and cannot be instantiated.");
+    }
     public static Booking toBooking(BookingEntity bookingEntity) {
         EventFightNight eventFightNight = EventFightNight.builder()
                 .id(bookingEntity.getEventFightNight().getId())
@@ -28,7 +30,7 @@ public class BookingConverter {
                                 .place(event.getPlace())
                                 .status(event.getStatus())
                                 .build())
-                        .collect(Collectors.toList()))
+                        .toList())
                 .build();
 
         return Booking.builder()

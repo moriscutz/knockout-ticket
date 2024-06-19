@@ -4,7 +4,6 @@ import com.knockoutticket.backend.business.AddEventToFightNightUseCase;
 import com.knockoutticket.backend.business.exception.BoxerNotFoundException;
 import com.knockoutticket.backend.business.exception.EventFightNightNotFoundException;
 import com.knockoutticket.backend.business.exception.OrganizerNotFoundException;
-import com.knockoutticket.backend.business.exception.TimeMismatchException;
 import com.knockoutticket.backend.domain.models.EventStatus;
 import com.knockoutticket.backend.domain.requests.AddEventToFightNightRequest;
 import com.knockoutticket.backend.domain.responses.AddEventToFightNightResponse;

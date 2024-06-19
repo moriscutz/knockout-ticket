@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class DeleteArchivedEventsForOrganizerUseCaseImpl implements DeleteArchivedEventsForOrganizerUseCase {
 
-    public ArchivedEventRepository archivedEventRepository;
+    private final ArchivedEventRepository archivedEventRepository;
 
     @Transactional
     @Override
