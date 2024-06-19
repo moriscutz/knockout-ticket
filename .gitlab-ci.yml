@@ -5,7 +5,7 @@ stages:
   - build
   - test
   - deploy
-  - sonar
+  - sonarqube-check
 #In a public environment, SonarQube would be aboove deployment, as if sonarqube fails, the image of the backend is not deployed.
 
 .backend:
