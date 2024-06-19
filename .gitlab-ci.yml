@@ -49,9 +49,11 @@ deploy:
     paths:
       - .env
 
-sonar:
-  stage: sonar
+sonarqube-check:
+  stage: sonarqube-check
   script:
     - ./gradlew test sonar jacocoTestReport
+
+
 after_script:
   - echo "End CI"
