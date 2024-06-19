@@ -24,7 +24,7 @@ public interface BookingRepository extends JpaRepository<BookingEntity, Long> {
     void deleteAllBookingsByFightNightId(@Param("fightNightId") Long fightNightId);
 
     @Query("SELECT b FROM BookingEntity b LEFT JOIN FETCH b.eventFightNight WHERE b.customerId.id = :customerId")
-    List<BookingEntity> findBookingsByCustomerId(@Param("customerId") Long customerId);
+    List<BookingEntity> findBookingsByCustomerId(@Param("customerId") Long customerId); // Join
 
     @Modifying
     @Transactional

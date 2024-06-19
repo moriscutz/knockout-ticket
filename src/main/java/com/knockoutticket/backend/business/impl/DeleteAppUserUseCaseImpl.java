@@ -5,14 +5,16 @@ import com.knockoutticket.backend.business.DeleteArchivedEventsForOrganizerUseCa
 import com.knockoutticket.backend.business.DeleteBookingsForUserUseCase;
 import com.knockoutticket.backend.business.DeleteEventsForOrganizerUseCase;
 import com.knockoutticket.backend.business.exception.UserNotFoundException;
+import com.knockoutticket.backend.domain.models.UserType;
 import com.knockoutticket.backend.persistence.AppUserRepository;
 import com.knockoutticket.backend.persistence.entity.AppUserEntity;
 import com.knockoutticket.backend.persistence.entity.UserTypeEntity;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import jakarta.transaction.Transactional;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +24,7 @@ public class DeleteAppUserUseCaseImpl implements DeleteAppUserUseCase {
     private final DeleteBookingsForUserUseCase deleteBookingsForUserUseCase;
     private final DeleteArchivedEventsForOrganizerUseCase deleteArchivedEventsForOrganizerUseCase;
     private final DeleteEventsForOrganizerUseCase deleteEventsForOrganizerUseCase;
+    private final UserConverter userConverter;
 
     @Transactional
     @Override
@@ -34,10 +37,14 @@ public class DeleteAppUserUseCaseImpl implements DeleteAppUserUseCase {
     }
 
     private void deleteConnectedObjects(Long userId, Set<UserTypeEntity> roles) {
-        if (roles.contains("NORMAL_USER")) {
+        Set<UserType> userTypes = roles.stream()
+                .map(UserTypeEntity::getType)
+                .collect(Collectors.toSet());
+
+        if (userTypes.contains(UserType.NORMAL_USER)) {
             deleteBookingsForUserUseCase.deleteBookingsForUser(userId);
         }
-        if (roles.contains("EVENT_ORGANIZER")) {
+        if (userTypes.contains(UserType.EVENT_ORGANIZER)) {
             deleteArchivedEventsForOrganizerUseCase.deleteArchivedEventsForOrganizer(userId);
             deleteEventsForOrganizerUseCase.deleteEventsForOrganizer(userId);
         }

@@ -18,7 +18,7 @@ public interface EventRepository extends JpaRepository<EventEntity,Long> {
             "FROM EventEntity e " +
             "GROUP BY e.organizer " +
             "ORDER BY COUNT(e) DESC")
-    List<GetEventsCountByOrganizerResponse> countEventsByOrganizer();
+    List<GetEventsCountByOrganizerResponse> countEventsByOrganizer(); //Aggregated use case
 
     @Modifying
     @Transactional

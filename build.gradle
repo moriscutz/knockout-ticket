@@ -67,6 +67,8 @@ sonar {
 		property "sonar.qualitygate.wait", true
 		property "sonar.host.url", "http://localhost:9000"
 		property "sonar.token", "sqp_b5d27caddb52f33aeb52ce3bcaac34f42cb27038"
+		property "sonar.coverage.inclusions", "**/business/**/*.java"
+		property "sonar.coverage.exclusions", "*"
 	}
 }
 
