@@ -13,4 +13,9 @@ public interface ArchivedEventRepository extends JpaRepository<ArchivedEventEnti
     @Transactional
     @Query("DELETE FROM ArchivedEventEntity e where e.organizer.id = :organizerId")
     void deleteArchivedEventsByOrganizerId(@Param("organizerId") Long organizerId);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM ArchivedEventEntity  e where e.winner.id = :boxerId OR e.loser.id = :boxerId")
+    void deleteArchivedEventsByBoxerId(@Param("boxerId") Long boxerId);
 }

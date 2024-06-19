@@ -47,6 +47,7 @@ public class DeleteAppUserUseCaseImpl implements DeleteAppUserUseCase {
         if (userTypes.contains(UserType.EVENT_ORGANIZER)) {
             deleteArchivedEventsForOrganizerUseCase.deleteArchivedEventsForOrganizer(userId);
             deleteEventsForOrganizerUseCase.deleteEventsForOrganizer(userId);
+            deleteBookingsForUserUseCase.deleteBookingsForUser(userId);
         }
     }
 }

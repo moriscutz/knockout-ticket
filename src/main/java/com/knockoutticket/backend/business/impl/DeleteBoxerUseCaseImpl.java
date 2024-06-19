@@ -1,5 +1,6 @@
 package com.knockoutticket.backend.business.impl;
 
+import com.knockoutticket.backend.business.DeleteArchivedEventsByBoxerUseCase;
 import com.knockoutticket.backend.business.DeleteBoxerUseCase;
 import com.knockoutticket.backend.persistence.BoxerRepository;
 import com.knockoutticket.backend.persistence.EventRepository;
@@ -16,7 +17,7 @@ import java.util.List;
 public class DeleteBoxerUseCaseImpl implements DeleteBoxerUseCase {
     private final BoxerRepository boxerRepository;
     private final EventRepository eventRepository;
-
+    private final DeleteArchivedEventsByBoxerUseCase deleteArchivedEventsByBoxerUseCase;
     @Transactional
     @Override
     public void deleteBoxer(Long id) {
@@ -27,6 +28,7 @@ public class DeleteBoxerUseCaseImpl implements DeleteBoxerUseCase {
         List<EventEntity> events = eventRepository.findByBoxer1IdOrBoxer2Id(id, id);
         eventRepository.deleteAll(events);
 
+        deleteArchivedEventsByBoxerUseCase.deleteArchivedEventsByBoxer(id);
 
         boxerRepository.delete(boxer);
     }
