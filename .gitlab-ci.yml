@@ -50,7 +50,7 @@ deploy:
       - .env
 
 sonar:
-  stage: sonarqube-check
+  stage: sonar
   script:
     - ./gradlew test sonar jacocoTestReport
 after_script:
