@@ -49,7 +49,7 @@ deploy:
     paths:
       - .env
 
-sonarqube-check:
+sonar:
   stage: sonarqube-check
   script:
     - ./gradlew test sonar jacocoTestReport
