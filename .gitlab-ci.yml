@@ -7,6 +7,7 @@ stages:
   - deploy
   - sonarqube-check
 #In a public environment, SonarQube would be aboove deployment, as if sonarqube fails, the image of the backend is not deployed.
+#Tests for repository will fail if a database is not running (Preferably run a docker container with DB)
 
 .backend:
   variables:
