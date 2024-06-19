@@ -7,8 +7,6 @@ import com.knockoutticket.backend.domain.responses.GetBookingsForUserResponse;
 import com.knockoutticket.backend.persistence.entity.BookingEntity;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
 public class BookingConverter {
     private BookingConverter() {
         throw new IllegalStateException("This is an utility class, and cannot be instantiated.");
@@ -44,7 +42,7 @@ public class BookingConverter {
     public static GetBookingsForUserResponse toGetBookingsForUserResponse(List<BookingEntity> bookings) {
         List<Booking> bookingDTOs = bookings.stream()
                 .map(BookingConverter::toBooking)
-                .collect(Collectors.toList());
+                .toList();
 
         return new GetBookingsForUserResponse(bookingDTOs);
     }

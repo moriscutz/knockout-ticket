@@ -9,9 +9,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
 public class GetBookingsForUserResponse {
-
-    public List<Booking> bookings;
+    private List<Booking> bookings;
 }
