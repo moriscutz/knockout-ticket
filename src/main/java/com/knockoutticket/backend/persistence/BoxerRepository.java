@@ -19,5 +19,5 @@ public interface BoxerRepository extends JpaRepository<BoxerEntity, Long> {
     List<BoxerEntity> findBoxersByEventId(@Param("eventId") Long eventId);
 
     @Query("SELECT new com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse(AVG(b.wins), AVG(b.losses), AVG(b.draws)) FROM BoxerEntity b")
-    GetAggregatedBoxerStatsResponse getAggregatedBoxerStats();
+    GetAggregatedBoxerStatsResponse getAggregatedBoxerStats(); //Aggregated use Case
 }

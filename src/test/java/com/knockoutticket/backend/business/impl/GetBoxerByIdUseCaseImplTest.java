@@ -24,7 +24,7 @@ class GetBoxerByIdUseCaseImplTest {
     private GetBoxerByIdUseCaseImpl getBoxerByIdUseCase;
 
     @Test
-    void getBoxerById_ShouldReturnBoxer() {
+    void getBoxerById_ShouldReturnBoxerFoundById() {
         // Arrange
         Long boxerId = 1L;
 

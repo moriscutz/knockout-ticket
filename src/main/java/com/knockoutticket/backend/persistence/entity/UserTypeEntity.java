@@ -1,5 +1,6 @@
 package com.knockoutticket.backend.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.knockoutticket.backend.domain.models.UserType;
 import lombok.*;
 
@@ -24,6 +25,10 @@ public class UserTypeEntity {
     @JoinColumn(name = "user_id", nullable = false)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private AppUserEntity user;
 
+    public void updateUserType(UserType type) {
+        this.type = type;
+    }
 }

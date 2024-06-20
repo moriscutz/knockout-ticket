@@ -45,6 +45,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation "org.mockito:mockito-core:3.+"
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 test {
@@ -58,7 +59,9 @@ jacocoTestReport {
 	}
 }
 
-
+// I am not failing the pipeline if the Quality Gate does not passes as we are only covering business layer, and the QG will fail because of Code Coverage
+// And if the pipeline fails ( because of QG which cannot pass as we don't cover the whole application with tests, as it is not required) the deployment wouldn't work.
+// More information can be found in Documentation
 sonar {
 	properties {
 		property "sonar.projectKey", "I516431_knockout-ticket_e081aed6-8032-46d6-828a-a1ea7d72e48d"
@@ -66,6 +69,7 @@ sonar {
 		property "sonar.qualitygate.wait", true
 		property "sonar.host.url", "http://localhost:9000"
 		property "sonar.token", "sqp_b5d27caddb52f33aeb52ce3bcaac34f42cb27038"
+		//property "sonar.coverage.exclusions" , "**/com/knockoutticket/backend/**, !**/com/knockoutticket/backend/business/*.java"
 	}
 }
 

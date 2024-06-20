@@ -21,11 +21,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebSecurityConfig {
 
-    private static final String[] SWAGGER_UI_RESOURCES = {
-            "/v3/api-docs/**",
-            "/swagger-resources/**",
-            "/swagger-ui.html",
-            "/swagger-ui/**"};
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity,
@@ -38,9 +33,8 @@ public class WebSecurityConfig {
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(registry ->
                         registry.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()                 // CORS pre-flight requests should be public
-                                .requestMatchers(HttpMethod.POST, "/users", "/tokens", "/boxers").permitAll() // Creating a user and login are public
+                                .requestMatchers(HttpMethod.POST, "/users", "/tokens").permitAll() // Creating a user and login are public
                                 .requestMatchers("/ws/**").permitAll()
-                                .requestMatchers(SWAGGER_UI_RESOURCES).permitAll()                        // Swagger is also public (In "real life" it would only be public in non-production environments)
                                 .anyRequest().authenticated()                                   // Everything else --> authentication required, which is Spring security's default behaviour
                 )
                 .exceptionHandling(configure -> configure.authenticationEntryPoint(authenticationEntryPoint))

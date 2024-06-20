@@ -1,0 +1,4 @@
+Sonarqube fails because Quality Gate does not pass.
+It does not pass because of the code coverage being under 80% for the WHOLE project.
+During this semester, we were asked to have over 80% coverage for BUSINESS layer, which I do have indeed, and --
+is present in sonarqube's folder of this project.

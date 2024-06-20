@@ -1,0 +1,3 @@
+Please take into account that tasks marked as IN PROGRESS are DONE.
+I did not mark them as DONE as they would have been deleted from JIRA and then I wouldn't be able to showcase --
+-- my Jira project.

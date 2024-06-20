@@ -4,27 +4,31 @@ services:
   backend:
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: staging
+      SPRING_DATASOURCE_URL: jdbc:mysql://knockout-staging-db:3306/knockoutticket_database
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+    env_file:
+      - .env
     depends_on:
-      - knockoutticket-db
+      - knockout-staging-db
     networks:
-      - knockoutticket-network
+      - knockout-network
 
-
-  knockoutticket-db:
+  knockout-staging-db:
     image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: 240420042501
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: knockoutticket_database
     ports:
       - "3369:3306"
     networks:
-      - knockoutticket-network
+      - knockout-network
 
 networks:
-  knockoutticket-network:
+  knockout-network:
     external: true
-
-

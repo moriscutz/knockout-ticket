@@ -1,0 +1,5 @@
+Even though two different files have the same lines, I decided to keep them separated to --
+ensure Separation of Concerns.
+
+Code Coverage for the application is 30%, but for business layer is 90%, which is over 80%, the requirement --
+for this semester.

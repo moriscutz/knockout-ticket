@@ -2,6 +2,7 @@ package com.knockoutticket.backend.controller;
 
 import com.knockoutticket.backend.business.*;
 import com.knockoutticket.backend.domain.requests.CreateBoxerRequest;
+import com.knockoutticket.backend.domain.requests.UpdateBoxerAddToRecordRequest;
 import com.knockoutticket.backend.domain.requests.UpdateBoxerRequest;
 import com.knockoutticket.backend.domain.responses.CreateBoxerResponse;
 import com.knockoutticket.backend.domain.responses.GetAggregatedBoxerStatsResponse;
@@ -28,6 +29,7 @@ public class BoxerController {
     private final GetAggregatedBoxerStatsUseCase getAggregatedBoxerStatsUseCase;
     private final UpdateBoxerUseCase updateBoxerUseCase;
     private final DeleteBoxerUseCase deleteBoxerUseCase;
+    private final UpdateBoxerAddToRecordUseCase updateBoxerAddToRecordUseCase;
 
     @RolesAllowed({"EVENT_ORGANIZER", "ADMINISTRATOR"})
     @PostMapping
@@ -73,6 +75,14 @@ public class BoxerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBoxer(@PathVariable Long id) {
         deleteBoxerUseCase.deleteBoxer(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RolesAllowed({"ADMINISTRATOR", "EVENT_ORGANIZER"})
+    @PutMapping("records/{id}")
+    public ResponseEntity<Void> updateBoxerRecord(@PathVariable Long id, @Valid @RequestBody UpdateBoxerAddToRecordRequest request){
+        request.setId(id);
+        updateBoxerAddToRecordUseCase.updateBoxerRecord(id, request);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

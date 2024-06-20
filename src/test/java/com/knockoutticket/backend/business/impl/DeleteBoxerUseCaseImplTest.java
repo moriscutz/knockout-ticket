@@ -1,5 +1,6 @@
 package com.knockoutticket.backend.business.impl;
 
+import com.knockoutticket.backend.business.DeleteArchivedEventsByBoxerUseCase;
 import com.knockoutticket.backend.persistence.BoxerRepository;
 import com.knockoutticket.backend.persistence.EventRepository;
 import com.knockoutticket.backend.persistence.entity.BoxerEntity;
@@ -18,7 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-
 class DeleteBoxerUseCaseImplTest {
 
     @Mock
@@ -26,6 +26,9 @@ class DeleteBoxerUseCaseImplTest {
 
     @Mock
     private EventRepository eventRepository;
+
+    @Mock
+    private DeleteArchivedEventsByBoxerUseCase deleteArchivedEventsByBoxerUseCase;
 
     @InjectMocks
     private DeleteBoxerUseCaseImpl deleteBoxerUseCase;
@@ -50,6 +53,7 @@ class DeleteBoxerUseCaseImplTest {
         deleteBoxerUseCase.deleteBoxer(boxerId);
 
         verify(eventRepository, times(1)).deleteAll(events);
+        verify(deleteArchivedEventsByBoxerUseCase, times(1)).deleteArchivedEventsByBoxer(boxerId);
         verify(boxerRepository, times(1)).delete(boxerEntity);
     }
 
@@ -64,6 +68,7 @@ class DeleteBoxerUseCaseImplTest {
 
         verify(eventRepository, never()).findByBoxer1IdOrBoxer2Id(anyLong(), anyLong());
         verify(eventRepository, never()).deleteAll(anyList());
+        verify(deleteArchivedEventsByBoxerUseCase, never()).deleteArchivedEventsByBoxer(anyLong());
         verify(boxerRepository, never()).delete(any(BoxerEntity.class));
     }
 }
