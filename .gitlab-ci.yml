@@ -49,6 +49,9 @@ deploy:
   artifacts:
     paths:
       - .env
+#CONTAINERS ARE REMOVED WHEN RUNNING DOCKER-COMPOSE DOWN, IT IS NOT REQUIRED TO USE DOCKER-COMPOSE STOP BEFORE TO STOP THE CONTAINERS. DOCKER-COMPOSE DOWN DOES THAT AUTOMATICALLY:
+#Definition from Docker Documentation: docker compose down
+#Description  Stops containers and removes containers, networks, volumes, and images created by up.
 
 sonarqube-check:
   stage: sonarqube-check
